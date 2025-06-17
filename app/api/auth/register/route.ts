@@ -1,0 +1,27 @@
+import { hash, compare } from "bcrypt";
+import { NextResponse } from "next/server";
+const saltRounds = 2;
+export async function POST(request: Request) {
+  const body = await request.json();
+
+  const { name, email, password } = body;
+
+  if (!name.trim() || !email.trim() || !password.trim()) {
+    return NextResponse.json({ message: "fields are empty" }, { status: 500 });
+  }
+
+  const hashedPass = await hash(password, saltRounds);
+  try {
+    const user = await prisma?.user.create({
+      data: {
+        name: name,
+        email: email,
+        hashedPassword: hashedPass,
+      },
+    });
+    return NextResponse.json(user, { status: 200 });
+  } catch (error) {
+    console.log("Error while Signing up", error);
+    return NextResponse.json("Failed", { status: 500 });
+  }
+}

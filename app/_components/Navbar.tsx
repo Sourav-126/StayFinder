@@ -1,0 +1,55 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Icons } from "./icons";
+import { Circle, CircleUserRound, Search } from "lucide-react";
+export default function Navbar() {
+  return (
+    <div className="flex justify-between items-center px-5 md:px-16 sm:px-20 py-3 bg-muted">
+      <div className="logo flex gap-1">
+        <Icons.logo className="w-6" />
+        <span className="text-red-400 font-semibold text-lg"> StayFinder</span>
+      </div>
+      <div className="search_feature flex gap-3 items-center bg-white px-[6px] py-[7px] border-2 rounded-full">
+        <div className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer">
+          Location
+        </div>
+        <div className="bg-gray-400 h-[20px] w-[0.7px] "></div>
+        <div className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer">
+          Date
+        </div>
+        <div className="bg-gray-400 h-[20px] w-[0.7px] "></div>
+
+        <div className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer">
+          Details
+        </div>
+        <div className="bg-red-400 rounded-full p-1 text-white cursor-pointer hover:scale-105 transition-all duration-200 delay-100">
+          <Search />
+        </div>
+      </div>
+      <div>
+        <UserComponent />
+      </div>
+    </div>
+  );
+}
+
+const UserComponent = () => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <CircleUserRound />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>My Bookings</DropdownMenuItem>
+        <DropdownMenuItem>Favorites</DropdownMenuItem>
+        <DropdownMenuItem>My Properties</DropdownMenuItem>
+        <DropdownMenuItem>Login </DropdownMenuItem>
+        <DropdownMenuItem>Register</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
