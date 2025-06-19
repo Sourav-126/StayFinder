@@ -4,6 +4,7 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import Navbar from "./_components/Navbar";
 import { getAuthSession } from "./utils/auth";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default async function RootLayout({
       <body className={`${poppins.className} antialiased`}>
         <Navbar />
         {children}
+        <Toaster />
       </body>
     </html>
   );

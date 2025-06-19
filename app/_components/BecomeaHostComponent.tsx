@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
+import { toast } from "sonner";
 const STEPS = {
   CATEGORY: 0,
   LOCATION: 1,
@@ -110,8 +110,10 @@ export default function BecomeAHostComponent() {
   const onSubmit = async (data: any) => {
     try {
       setIsLoading(true);
-      const response = await axios.post(`/api/v1/listing`, data);
-      console.log("Listing created:", response.data);
+      const response = await axios.post(`/api/v1/listing`, data).then(() => {
+        toast.success("Listing Created Successfully");
+      });
+      console.log("Listing created:", response);
       router.push("/properties");
     } catch (error) {
       console.error("Error creating listing:", error);
