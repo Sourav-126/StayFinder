@@ -4,7 +4,6 @@ import { prisma } from "../utils/prisma";
 import { formatISO } from "date-fns";
 
 export async function getListings(searchParams) {
-  console.log(searchParams);
   try {
     const {
       locationValue: locationvalue,
