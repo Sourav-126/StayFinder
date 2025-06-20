@@ -4,9 +4,10 @@ import { prisma } from "../utils/prisma";
 import { formatISO } from "date-fns";
 
 export async function getListings(searchParams) {
+  console.log(searchParams);
   try {
     const {
-      locationValue,
+      locationValue: locationvalue,
       guestCount,
       roomCount,
       childCount,
@@ -19,7 +20,7 @@ export async function getListings(searchParams) {
 
     query = {
       ...query,
-      ...(locationValue && { locationValue }),
+      ...(locationvalue && { locationvalue }),
       ...(guestCount && { guestCount: { gte: +guestCount } }),
       ...(roomCount && { roomCount: { gte: +roomCount } }),
       ...(childCount && { childCount: { gte: +childCount } }),
@@ -32,7 +33,7 @@ export async function getListings(searchParams) {
       query = {
         ...query,
         NOT: {
-          reservations: {
+          reservation: {
             some: {
               OR: [
                 {
@@ -62,10 +63,8 @@ export async function getListings(searchParams) {
       createdAt: listing.createdAt.toISOString(),
     }));
 
-    console.log(modifiedListings, " listings");
-
-    return listings;
-  } catch (error) {
-    // return { ok: false, message: error.message };
+    return modifiedListings;
+  } catch (error: any) {
+    return { ok: false, message: error.message };
   }
 }

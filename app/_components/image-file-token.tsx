@@ -5,10 +5,8 @@ import { uploadToBlob } from "../utils/uploadToBlob";
 const ImageUpload = ({ value, returnUrl }: any) => {
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     const { url } = await uploadToBlob(file);
     returnUrl(url);
-    console.log(url);
   };
   return (
     <div>

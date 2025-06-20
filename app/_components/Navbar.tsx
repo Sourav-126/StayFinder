@@ -9,6 +9,7 @@ import { Icons } from "./icons";
 import { Circle, CircleUserRound, Search } from "lucide-react";
 import { useState } from "react";
 import { SearchModal } from "./searchModal";
+import { Button } from "@/components/ui/button";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalStateStep, setModalStateStep] = useState(-1);
@@ -16,14 +17,16 @@ export default function Navbar() {
     if (!isOpen) {
       setIsOpen(true);
       setModalStateStep(step);
-      console.log(step);
     }
   };
   return (
-    <div className="flex justify-between items-center px-5 md:px-16 sm:px-20 py-3 bg-muted">
+    <div className="flex justify-between items-center px-5 md:px-16 sm:px-20 py-3 bg-muted border-b">
       <div className="logo flex gap-1">
         <Icons.logo className="w-6" />
-        <span className="text-red-400 font-semibold text-lg"> StayFinder</span>
+        <a href="/" className="text-red-400 font-semibold text-lg">
+          {" "}
+          StayFinder
+        </a>
       </div>
       <div className="search_feature flex gap-3 items-center bg-white px-[6px] py-[7px] border-2 rounded-full">
         <div

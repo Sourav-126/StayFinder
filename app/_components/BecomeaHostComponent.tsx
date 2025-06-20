@@ -113,7 +113,6 @@ export default function BecomeAHostComponent() {
       const response = await axios.post(`/api/v1/listing`, data).then(() => {
         toast.success("Listing Created Successfully");
       });
-      console.log("Listing created:", response);
       router.push("/properties");
     } catch (error) {
       console.error("Error creating listing:", error);

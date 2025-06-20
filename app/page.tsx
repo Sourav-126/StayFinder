@@ -1,6 +1,12 @@
-"use server";
+import { categories } from "@/static/config";
+import CategoryHandler from "./_components/category-handler";
 import { ListingCard } from "./_components/listings-card";
 import { getListings } from "./actions/getListings";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "StayFinder",
+};
 
 export default async function Home({ searchParams }) {
   const parsedParams = {
@@ -8,24 +14,46 @@ export default async function Home({ searchParams }) {
     guestCount: searchParams.guestCount ? parseInt(searchParams.guestCount) : 0,
     roomCount: searchParams.roomCount ? parseInt(searchParams.roomCount) : 0,
     childCount: searchParams.childCount ? parseInt(searchParams.childCount) : 0,
-    startDate: searchParams.startDate ? new Date(searchParams.startDate) : null,
-    endDate: searchParams.endDate ? new Date(searchParams.endDate) : null,
+    startDate: searchParams.startDate || undefined,
+    endDate: searchParams.endDate || undefined,
+    cat: searchParams.categories || searchParams.cat,
   };
-
-  console.log("Raw searchParams:", searchParams);
-  console.log("Parsed params:", parsedParams);
 
   const listings = await getListings(parsedParams);
 
+  if (!Array.isArray(listings)) {
+    return (
+      <section className="w-full grid items-center">
+        <h1 className="text-3xl font-semibold text-red-600">
+          Error Loading Listings
+        </h1>
+        <pre>{listings.message || "Something went wrong"}</pre>
+      </section>
+    );
+  }
+
+  if (listings.length === 0) {
+    return (
+      <section>
+        <CategoryHandler />
+        <div className="w-full grid h-screen place-items-center">
+          <div className="text-center">
+            <h1 className="text-3xl font-semibold">No Listings Found!</h1>
+            <p className="">Try Changing Your Filters</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section>
-      <h2>Search Parameters:</h2>
-      <pre>{JSON.stringify(parsedParams, null, 2)}</pre>
-      <h2>Listings:</h2>
-      <pre>{JSON.stringify(listings, null, 2)}</pre>
-      {listings?.map((listing) => {
-        return <ListingCard listing={listing} />;
-      })}
+    <section className="">
+      <CategoryHandler />
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-6 p-4 md:p-8">
+        {listings.map((listing) => {
+          return <ListingCard key={listing.id} listings={listing} />;
+        })}
+      </div>
     </section>
   );
 }

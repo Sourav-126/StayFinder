@@ -5,7 +5,7 @@ import { useState } from "react";
 import CountrySelect from "./country-select";
 import { CalenderInput } from "./calender";
 import { Counter } from "./counter-input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const STEPS = {
   LOCATION: 0,
@@ -28,6 +28,7 @@ export const SearchModal = ({ isOpen, setIsOpen, stepAt }) => {
     endDate: new Date(),
     key: "selection",
   });
+  const searchParams = useSearchParams();
 
   const onBack = () => {
     if (step != 0) setStep((previousStep) => previousStep - 1);
@@ -45,7 +46,7 @@ export const SearchModal = ({ isOpen, setIsOpen, stepAt }) => {
             startDate: dateRange.startRange,
             endDate: dateRange.endDate,
           }),
-      }; // queyr modified ends here
+      };
 
       if (Object.keys(trackOfQueryParams).length === 0) return;
 
@@ -57,8 +58,10 @@ export const SearchModal = ({ isOpen, setIsOpen, stepAt }) => {
             )}`
         )
         .join("&");
+      const params = new URLSearchParams(searchParams.toString());
+      const tempCat = params.get("cat");
 
-      const url = `/?${queryString}`;
+      const url = `/?${queryString}&=${tempCat}`;
       setIsOpen(false);
       router.push(url);
     }
