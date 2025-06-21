@@ -3,6 +3,28 @@
 import { getAuthSession } from "../utils/auth";
 import { prisma } from "../utils/prisma";
 
+export const getReservation = async () => {
+  const session = await getAuthSession();
+
+  if (!session || !session.user) {
+    return null;
+  }
+
+  try {
+    const reservation = await prisma.reservation.findMany({
+      where: {
+        userId: (session.user as any).id,
+      },
+      include: {
+        listing: true,
+      },
+    });
+    return reservation;
+  } catch (error: any) {
+    return { ok: false, message: "Some error Occurred", status: 500 };
+  }
+};
+
 export async function setReservation({ listingId, startDate, endDate, price }) {
   const session = await getAuthSession();
   if (!session || !session.user) {

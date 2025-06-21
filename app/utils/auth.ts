@@ -2,7 +2,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./prisma";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { hash, compare } from "bcrypt";
+import { hash, compare } from "bcryptjs";
 import { AuthOptions, getServerSession } from "next-auth";
 const saltRounds = 2;
 export const authOptions: AuthOptions = {

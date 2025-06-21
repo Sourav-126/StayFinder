@@ -9,7 +9,7 @@ import { Icons } from "./icons";
 import { Circle, CircleUserRound, Search } from "lucide-react";
 import { useState } from "react";
 import { SearchModal } from "./searchModal";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalStateStep, setModalStateStep] = useState(-1);
@@ -83,11 +83,25 @@ const UserComponent = () => {
         <CircleUserRound />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>My Bookings</DropdownMenuItem>
-        <DropdownMenuItem>Favorites</DropdownMenuItem>
-        <DropdownMenuItem>My Properties</DropdownMenuItem>
-        <DropdownMenuItem>Login </DropdownMenuItem>
-        <DropdownMenuItem>Register</DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          <Link href="/bookings">My Bookings</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          <Link href="/favorites">My Favorites</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          <Link href="/properties">My Properties</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          <Link href="/sign-in">Login</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          <Link href="/sign-up"> Register </Link>
+        </DropdownMenuItem>
+        <hr />
+        <DropdownMenuItem className="cursor-pointer">
+          <Link href="/become-a-host"> StayPlace Your Home!</Link>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

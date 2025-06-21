@@ -1,36 +1,58 @@
+"use client";
+
 import useCountries from "@/hooks/useCountries";
 import { IndianRupee } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-export const ListingCard = ({ listings }) => {
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+
+export default function ListingsCard({
+  reservationsData,
+  listing,
+  showSecondaryBtn = false,
+  secondaryBtnLabel,
+  onAction,
+}) {
   const { getByValue } = useCountries();
-  const countryDetails = getByValue(listings.locationvalue);
+  const router = useRouter();
+  const countryDetails = getByValue(listing.locationValue);
   return (
-    <Link
-      href={`/listings/${listings.id}`}
-      className="p-3 rounded shadow border border-gray-200"
-    >
-      <div className=" w-full h-[240px] rounded-lg ">
+    <div className="p-3 rounded shadow border border-gray-200 relative">
+      <div className="w-full aspect-square rounded-lg">
         <Image
-          className="object-cover aspect-square w-full rounded-lg "
-          src={listings.imageSrc}
-          height={400}
+          className="object-cover w-full h-full rounded-lg"
+          src={listing.imageSrc}
           width={400}
-          alt="Property Listing"
+          height={400}
+          alt="property listing"
         />
       </div>
-      <p className="font-bold text-lg md:text-2xl capitalize pt-2">
-        {" "}
-        {listings.title}
+      {/* <Favorite className="absolute top-6 right-6" listingId={listing.id} user={user} /> */}
+      <p className="font-semibold text-lg md:text-2xl capitalize pt-2">
+        {listing.title}
       </p>
-      <p className="text-lg flex gap-1 items-center">
-        <IndianRupee size={16} />
-        {listings.price} per Night
-      </p>
-      <div className="text-gray-500">
+      {reservationsData ? (
+        <p>Paid {reservationsData.totalPrice} rupees</p>
+      ) : (
+        <p className="text-lg flex gap-1 items-center">
+          <IndianRupee size={16} /> {listing.price} per Night
+        </p>
+      )}
+      <div className="text-gray-400">
         {countryDetails?.label},&nbsp;
         {countryDetails?.region}
       </div>
-    </Link>
+      <div className="">
+        <Button
+          onClick={() => router.push(`/listings/${listing.id}`)}
+          className="w-full"
+        >
+          View Property
+        </Button>
+        {showSecondaryBtn && (
+          <Button onClick={onAction}>{secondaryBtnLabel}</Button>
+        )}
+      </div>
+    </div>
   );
-};
+}

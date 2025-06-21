@@ -1,6 +1,5 @@
-import { categories } from "@/static/config";
 import CategoryHandler from "./_components/category-handler";
-import { ListingCard } from "./_components/listings-card";
+import ListingsCard from "./_components/listings-card";
 import { getListings } from "./actions/getListings";
 import { Metadata } from "next";
 
@@ -51,7 +50,7 @@ export default async function Home({ searchParams }) {
       <CategoryHandler />
       <div className="grid grid-cols-2 md:grid-cols-6 gap-6 p-4 md:p-8">
         {listings.map((listing) => {
-          return <ListingCard key={listing.id} listings={listing} />;
+          return <ListingsCard key={listing.id} listing={listing} />;
         })}
       </div>
     </section>

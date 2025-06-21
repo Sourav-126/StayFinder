@@ -8,7 +8,7 @@ export default async function getReservationById(listingId: string) {
         listingId: listingId,
       },
       include: {
-        Listing: true,
+        listing: true,
       },
     });
     return reservations;
