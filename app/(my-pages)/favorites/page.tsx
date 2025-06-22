@@ -10,27 +10,7 @@ async function Favorites() {
   if (!user) notFound();
 
   const favoritesResponse = await getFavoriteListings();
-
-  if (!favoritesResponse.ok) {
-    if (favoritesResponse.status === "403") {
-      notFound();
-    }
-    return (
-      <section className="h-screen grid place-items-center">
-        <div className="text-center">
-          <h1 className="font-semibold text-3xl text-red-600">
-            Error Loading Favorites
-          </h1>
-          <p className="text-gray-600 mt-2">{favoritesResponse.message}</p>
-          <a href="/" className="underline mt-4 inline-block">
-            Go Back Home
-          </a>
-        </div>
-      </section>
-    );
-  }
-
-  const favorites = favoritesResponse.data || [];
+  const favorites = favoritesResponse?.data?.filter((f) => f !== null) || [];
 
   if (favorites.length === 0) {
     return (
@@ -45,7 +25,6 @@ async function Favorites() {
           <a href="/" className="underline text-blue-600 hover:text-blue-800">
             Browse Properties
           </a>
-          <br />
         </div>
       </section>
     );
@@ -63,12 +42,15 @@ async function Favorites() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-4 gap-6">
         {favorites.map((listing) => (
           <ListingsCard
             key={listing.id}
-            secondaryBtnLabel="Favorites"
-            listing={listing}
+            secondaryBtnLabel="Remove from Favorites"
+            listing={{
+              ...listing,
+              imageSrc: listing.imageSrc ?? "/fallback.jpg", // ✅ Safe default
+            }}
             user={user}
           />
         ))}

@@ -2,12 +2,17 @@ import CategoryHandler from "./_components/category-handler";
 import ListingsCard from "./_components/listings-card";
 import { getListings } from "./actions/getListings";
 import { Metadata } from "next";
+import { getAuthSession } from "./utils/auth";
+import { toast } from "sonner";
+import { getUser } from "./actions/getUser";
 
 export const metadata: Metadata = {
   title: "StayFinder",
 };
 
 export default async function Home({ searchParams }) {
+  const user = await getUser();
+
   const parsedParams = {
     locationValue: searchParams.locationValue || "",
     guestCount: searchParams.guestCount ? parseInt(searchParams.guestCount) : 0,
@@ -57,6 +62,7 @@ export default async function Home({ searchParams }) {
               key={listing.id}
               listing={listing}
               secondaryBtnLabel=""
+              user={user}
             />
           );
         })}

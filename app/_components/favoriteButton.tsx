@@ -10,7 +10,6 @@ function Favorite({ listingId, user, className, ...props }) {
     user: user,
   });
 
-
   const color = isFavorite ? "red" : "black";
 
   return (
