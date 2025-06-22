@@ -1,5 +1,6 @@
 "use server";
 
+import { SessionUser } from "../types";
 import { getAuthSession } from "../utils/auth";
 import { prisma } from "../utils/prisma";
 
@@ -13,14 +14,14 @@ export const getReservation = async () => {
   try {
     const reservation = await prisma.reservation.findMany({
       where: {
-        userId: (session.user as any).id,
+        userId: (session.user as SessionUser).id,
       },
       include: {
         Listing: true,
       },
     });
     return reservation;
-  } catch (error: any) {
+  } catch {
     return { ok: false, message: "Some error Occurred", status: 500 };
   }
 };
@@ -46,7 +47,7 @@ export async function setReservation({
   }
 
   try {
-    const listReservation = await prisma.listing.update({
+    await prisma.listing.update({
       where: {
         id: listingId,
       },
@@ -55,14 +56,14 @@ export async function setReservation({
           create: {
             startDate,
             endDate,
-            userId: (session?.user as any).id,
+            userId: (session?.user as SessionUser).id,
             totalPrice: price,
           },
         },
       },
     });
     return { ok: true, message: "reserved", status: 201 };
-  } catch (error: any) {
-    console.log(error.message);
+  } catch {
+    return { ok: false, message: "Not updated" };
   }
 }

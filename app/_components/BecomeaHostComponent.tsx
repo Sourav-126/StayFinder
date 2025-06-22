@@ -1,10 +1,10 @@
 "use client";
+
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { categories } from "@/static/config";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import CountrySelect from "./country-select";
 import { Input } from "@/components/ui/input";
 import { Counter } from "./counter-input";
 import ImageUpload from "./image-file-token";
@@ -13,6 +13,9 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { CountrySelectValue } from "../types";
+import { CountrySelect } from "../_components/country-select";
+
 const STEPS = {
   CATEGORY: 0,
   LOCATION: 1,
@@ -22,31 +25,24 @@ const STEPS = {
   PRICE: 5,
 };
 
+type FormSchema = {
+  title: string;
+  category: string;
+  location: CountrySelectValue | null;
+  description: string;
+  roomCount: number;
+  childCount: number;
+  guestCount: number;
+  imageSrc: string;
+  price: number | null;
+};
+
 export default function BecomeAHostComponent() {
   const router = useRouter();
   const [step, setStep] = useState(STEPS.CATEGORY);
   const [isLoading, setIsLoading] = useState(false);
 
-  const setCustomValue = (title: string, value: any) => {
-    setValue(title as any, value);
-  };
-
-  interface CountryOption {
-    value: string;
-    label: string;
-  }
-
-  const { register, handleSubmit, setValue, watch } = useForm<{
-    title: string;
-    category: string;
-    location: CountryOption | null;
-    description: string;
-    roomCount: number;
-    childCount: number;
-    guestCount: number;
-    imageSrc: string;
-    price: number | null;
-  }>({
+  const { register, handleSubmit, setValue, watch } = useForm<FormSchema>({
     defaultValues: {
       title: "",
       category: "",
@@ -59,6 +55,14 @@ export default function BecomeAHostComponent() {
       price: null,
     },
   });
+
+  const setCustomValue = <T extends keyof FormSchema>(
+    field: T,
+    value: FormSchema[T]
+  ) => {
+    setValue("location", value as CountrySelectValue | null);
+    setValue("price", value as number | null);
+  };
 
   const category = watch("category");
   const location = watch("location");
@@ -75,10 +79,7 @@ export default function BecomeAHostComponent() {
       case STEPS.CATEGORY:
         return !!category;
       case STEPS.LOCATION:
-        return (
-          !!location &&
-          (typeof location === "object" ? location.value : location)
-        );
+        return !!location?.value;
       case STEPS.INFO:
         return guestCount >= 2 && roomCount > 0;
       case STEPS.IMAGES:
@@ -95,7 +96,6 @@ export default function BecomeAHostComponent() {
     category,
     location,
     roomCount,
-    childCount,
     guestCount,
     imageSrc,
     title,
@@ -103,16 +103,13 @@ export default function BecomeAHostComponent() {
     price,
   ]);
 
-  const onLeftClick = () => {
-    setStep((step) => step - 1);
-  };
+  const onLeftClick = () => setStep((prev) => prev - 1);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormSchema) => {
     try {
       setIsLoading(true);
-      const response = await axios.post(`/api/v1/listing`, data).then(() => {
-        toast.success("Listing Created Successfully");
-      });
+      await axios.post(`/api/v1/listing`, data);
+      toast.success("Listing Created Successfully");
       router.push("/properties");
     } catch (error) {
       console.error("Error creating listing:", error);
@@ -123,38 +120,34 @@ export default function BecomeAHostComponent() {
 
   const onRightClick = () => {
     if (step !== STEPS.PRICE) {
-      setStep((step) => step + 1);
+      setStep((prev) => prev + 1);
     }
-    // For the final step, we'll use handleSubmit in the button onClick
   };
 
   const nextLabel = useMemo(() => {
-    if (step === STEPS.PRICE) {
-      return (
-        <span className="flex flex-row gap-2 items-center text-white font-semibold text-md">
-          {isLoading ? "Creating..." : "List"}
-          <ArrowRight size="20" className="text-white" />
-        </span>
-      );
-    } else {
-      return <ArrowRight size="20" className="text-white" />;
-    }
+    return step === STEPS.PRICE ? (
+      <span className="flex flex-row gap-2 items-center text-white font-semibold text-md">
+        {isLoading ? "Creating..." : "List"}
+        <ArrowRight size="20" className="text-white" />
+      </span>
+    ) : (
+      <ArrowRight size="20" className="text-white" />
+    );
   }, [step, isLoading]);
 
-  let sourceAtStep = (
-    <div className="flex flex-col gap-3">
-      <h1 className="text-lg md:text-xl font-semibold text-gray-600">
-        Which of this category defines your Property?
-      </h1>
-      <p className="text-gray-500">Pick a Category</p>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {categories.map((each) => {
-          return (
+  let sourceAtStep;
+  if (step === STEPS.CATEGORY) {
+    sourceAtStep = (
+      <div className="flex flex-col gap-3">
+        <h1 className="text-lg md:text-xl font-semibold text-gray-600">
+          Which of this category defines your Property?
+        </h1>
+        <p className="text-gray-500">Pick a Category</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {categories.map((each) => (
             <div
               key={each.label}
-              onClick={() => {
-                setCustomValue("category", each.label);
-              }}
+              onClick={() => setCustomValue("category", each.label)}
               className={cn(
                 "bg-gray-100 flex flex-col p-5 rounded-lg border-gray-300/10 cursor-pointer",
                 category === each.label
@@ -165,13 +158,11 @@ export default function BecomeAHostComponent() {
               <each.icon />
               {each.label}
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
-    </div>
-  );
-
-  if (step == STEPS.LOCATION) {
+    );
+  } else if (step === STEPS.LOCATION) {
     sourceAtStep = (
       <div>
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
@@ -179,11 +170,11 @@ export default function BecomeAHostComponent() {
         </h1>
         <CountrySelect
           value={location}
-          onChange={(value: any) => setCustomValue("location", value)}
+          onChange={(value) => setCustomValue("location", value)}
         />
       </div>
     );
-  } else if (step == STEPS.INFO) {
+  } else if (step === STEPS.INFO) {
     sourceAtStep = (
       <div className="flex flex-col gap-3">
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
@@ -240,7 +231,7 @@ export default function BecomeAHostComponent() {
         )}
         <ImageUpload
           value={imageSrc}
-          returnUrl={(url) => setCustomValue("imageSrc", url)}
+          returnUrl={(url: string) => setCustomValue("imageSrc", url)}
         />
       </div>
     );
@@ -263,7 +254,11 @@ export default function BecomeAHostComponent() {
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           How much do you charge for your property per Night?
         </h1>
-        <Input placeholder="e.g 1000" {...register("price")} />
+        <Input
+          placeholder="e.g 1000"
+          type="number"
+          {...register("price", { valueAsNumber: true })}
+        />
       </div>
     );
   }
@@ -273,17 +268,16 @@ export default function BecomeAHostComponent() {
       {sourceAtStep}
       <div className="w-full flex flex-col fixed bottom-0">
         <div className="flex justify-between px-8 pb-4">
-          {step > 0 && (
-            <button className="p-4 bg-red-400 rounded-full cursor-pointer hover:bg-red-500 transition-colors">
-              <ArrowLeft
-                onClick={onLeftClick}
-                size="20"
-                className="text-white"
-              />
+          {step > 0 ? (
+            <button
+              className="p-4 bg-red-400 rounded-full cursor-pointer hover:bg-red-500 transition-colors"
+              onClick={onLeftClick}
+            >
+              <ArrowLeft size="20" className="text-white" />
             </button>
+          ) : (
+            <div></div>
           )}
-
-          {step === 0 && <div></div>}
 
           <button
             onClick={

@@ -2,7 +2,17 @@ import { getUser } from "@/app/actions/getUser";
 import { notFound } from "next/navigation";
 import { getReservation } from "../../actions/reservation";
 import { BookedCard } from "@/app/_components/bookedCard";
+
 import Link from "next/link";
+import { Reservation, Listing } from "@/app/types";
+
+export type SafeReservation = Omit<Reservation, "Listing" | "userId"> & {
+  userId: string;
+  Listing: Listing & {
+    imageSrc: string;
+    userId: string;
+  };
+};
 
 export default async function Bookings() {
   const user = await getUser();
@@ -23,17 +33,20 @@ export default async function Bookings() {
     );
   }
 
-  const safeReservations = data.map((reservation: any) => ({
-    ...reservation,
-    userId: reservation.userId ?? reservation.Listing?.userId ?? "",
-    Listing: reservation.Listing
-      ? {
-          ...reservation.Listing,
-          imageSrc: reservation.Listing.imageSrc ?? "/fallback.jpg",
-          userId: reservation.Listing.userId ?? "",
-        }
-      : null,
-  }));
+  const safeReservations: SafeReservation[] = data
+    .filter((reservation) => reservation.Listing && reservation.listingId)
+    .map((reservation) => ({
+      ...reservation,
+      userId: reservation.userId ?? reservation.Listing!.userId ?? "",
+      listingId: reservation.listingId ?? "",
+      Listing: {
+        ...reservation.Listing!,
+        imageSrc: reservation.Listing?.imageSrc ?? "/fallback.jpg",
+        userId: reservation.Listing?.userId ?? "",
+        createdAt: reservation.Listing!.createdAt.toString(),
+        updatedAt: reservation.Listing!.updatedAt.toString(),
+      },
+    }));
 
   return (
     <div className="p-4 md:p-8">

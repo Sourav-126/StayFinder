@@ -7,8 +7,6 @@ import Link from "next/link";
 
 import type { SafeUser } from "@/app/types";
 
-const rawUser = await getUser();
-
 async function Favorites() {
   const rawUser = await getUser();
 

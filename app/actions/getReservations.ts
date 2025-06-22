@@ -12,7 +12,7 @@ export default async function getReservationById(listingId: string) {
       },
     });
     return reservations;
-  } catch (error: any) {
-    console.log(error.message);
+  } catch {
+    return { ok: false, message: "reservation not found" };
   }
 }

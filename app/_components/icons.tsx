@@ -1,5 +1,5 @@
 export const Icons = {
-  logo: (props: any) => (
+  logo: (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       width={25}
       height={25}
@@ -14,7 +14,7 @@ export const Icons = {
       />
     </svg>
   ),
-  Google: (props: any) => (
+  Google: (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       width={800}
       height={800}

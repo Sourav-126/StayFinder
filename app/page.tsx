@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     locationValue?: string;
     guestCount?: string;
     roomCount?: string;
@@ -20,7 +20,7 @@ interface Props {
     endDate?: string;
     categories?: string;
     cat?: string;
-  };
+  }>;
 }
 
 interface ParsedParams {
@@ -34,6 +34,9 @@ interface ParsedParams {
 }
 
 export default async function Home({ searchParams }: Props) {
+  // Await the searchParams Promise
+  const resolvedSearchParams = await searchParams;
+
   const rawUser = await getUser();
 
   if (!rawUser || "ok" in rawUser) notFound();
@@ -47,13 +50,19 @@ export default async function Home({ searchParams }: Props) {
   };
 
   const parsedParams: ParsedParams = {
-    locationValue: searchParams.locationValue || "",
-    guestCount: searchParams.guestCount ? parseInt(searchParams.guestCount) : 0,
-    roomCount: searchParams.roomCount ? parseInt(searchParams.roomCount) : 0,
-    childCount: searchParams.childCount ? parseInt(searchParams.childCount) : 0,
-    startDate: searchParams.startDate || undefined,
-    endDate: searchParams.endDate || undefined,
-    cat: searchParams.categories || searchParams.cat,
+    locationValue: resolvedSearchParams.locationValue || "",
+    guestCount: resolvedSearchParams.guestCount
+      ? parseInt(resolvedSearchParams.guestCount)
+      : 0,
+    roomCount: resolvedSearchParams.roomCount
+      ? parseInt(resolvedSearchParams.roomCount)
+      : 0,
+    childCount: resolvedSearchParams.childCount
+      ? parseInt(resolvedSearchParams.childCount)
+      : 0,
+    startDate: resolvedSearchParams.startDate || undefined,
+    endDate: resolvedSearchParams.endDate || undefined,
+    cat: resolvedSearchParams.categories || resolvedSearchParams.cat,
   };
 
   const listings = await getListings(parsedParams);

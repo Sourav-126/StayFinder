@@ -17,8 +17,7 @@ export async function getFavoriteListings() {
       },
     });
     return { ok: true, data: favoriteListings, status: "200" };
-  } catch (error: any) {
-    console.log(error.message);
+  } catch {
     return { ok: false, message: "Could not find favorites", status: "500" };
   }
 }
@@ -31,8 +30,7 @@ export async function setFavorite(id: string) {
   if (!id || typeof id !== "string") {
     return { ok: false, message: "Invalid ID", status: "400" };
   }
-  let favoritesIds = [...(user.favoritesIds || [])];
-
+  const favoritesIds = [...(user.favoritesIds || [])];
   if (favoritesIds.includes(id)) {
     return { ok: true, message: "Already in favorites" };
   }
@@ -45,8 +43,7 @@ export async function setFavorite(id: string) {
       },
     });
     return { ok: true, message: "Added to favorites" };
-  } catch (error: any) {
-    console.log(error.message);
+  } catch {
     return { ok: false, message: "Could not add to favorites", status: "500" };
   }
 }
@@ -70,8 +67,7 @@ export async function deleteFavorite(id: string) {
       },
     });
     return { ok: true, message: "Removed from favorites" };
-  } catch (error: any) {
-    console.log(error.message);
+  } catch {
     return {
       ok: false,
       message: "Could not remove from favorites",

@@ -2,9 +2,12 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./prisma";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { hash, compare } from "bcryptjs";
-import { AuthOptions, getServerSession } from "next-auth";
-const saltRounds = 2;
+import { compare } from "bcryptjs";
+import { AuthOptions, getServerSession, Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
+import { User } from "next-auth";
+import { SessionUser } from "../types";
+
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -15,30 +18,29 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "email", type: "text" },
-        password: { label: "password", type: "password" },
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        +console.log(credentials);
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid Credentials");
+          throw new Error("Invalid credentials");
         }
+
         const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
+          where: { email: credentials.email },
         });
 
         if (!user || !user.hashedPassword) {
           throw new Error("User not found");
         }
+
         const isCorrectPassword = await compare(
-          user.hashedPassword,
-          await hash(credentials.password, saltRounds)
+          credentials.password,
+          user.hashedPassword
         );
 
         if (!isCorrectPassword) {
-          throw new Error("Invalid Credentials");
+          throw new Error("Invalid credentials");
         }
 
         return user;
@@ -53,22 +55,27 @@ export const authOptions: AuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({ session, token }: { session: any; token: any }) {
-      if (token) {
-        session.user.id = token.id;
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (token && session.user) {
+        (session.user as SessionUser).id = token.id as string;
+        session.user.email = token.email;
+        session.user.name = token.name;
+        session.user.image = token.image! as string;
       }
       return session;
     },
-    async jwt({ token, user }: { token: any; user: any }) {
+
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
-        (token.id = user.id),
-          (token.email = user.email),
-          (token.name = user.name),
-          (token.image = user.image);
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.image = user.image;
       }
       return token;
     },
   },
 };
 
+// Helper to get server session with correct types
 export const getAuthSession = () => getServerSession(authOptions);

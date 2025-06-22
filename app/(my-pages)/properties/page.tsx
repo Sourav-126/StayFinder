@@ -4,6 +4,7 @@ import { prisma } from "../../utils/prisma";
 import { getAuthSession } from "../../utils/auth";
 import { PropertyBox } from "../../_components/PropertyBox";
 import Link from "next/link";
+import type { SessionUser } from "@/app/types";
 
 export default async function PropertiesPage() {
   const session = await getAuthSession();
@@ -12,7 +13,7 @@ export default async function PropertiesPage() {
 
   const propertiesList = await prisma.listing.findMany({
     where: {
-      userId: (session.user as any).id,
+      userId: (session.user as SessionUser).id,
     },
   });
 

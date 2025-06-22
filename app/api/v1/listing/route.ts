@@ -1,6 +1,7 @@
 import { getAuthSession } from "@/app/utils/auth";
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/utils/prisma";
+import { SessionUser } from "@/app/types";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
         guestCount,
         price: parseInt(price),
         locationvalue: location.value,
-        userId: (session.user as any).id,
+        userId: (session.user as SessionUser).id,
       },
     });
 

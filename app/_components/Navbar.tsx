@@ -10,13 +10,12 @@ import { CircleUserRound, Search } from "lucide-react";
 import { useState } from "react";
 import { SearchModal } from "./searchModal";
 import Link from "next/link";
-
+type Step = 0 | 1 | 2;
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [modalStateStep, setModalStateStep] = useState(-1);
-  const [session, setSession] = useState<unknown>(null);
+  const [modalStateStep, setModalStateStep] = useState<Step>(0);
 
-  const openSearchModalStep = (step: number) => {
+  const openSearchModalStep = (step: Step) => {
     if (!isOpen) {
       setIsOpen(true);
       setModalStateStep(step);

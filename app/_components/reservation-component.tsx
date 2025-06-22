@@ -15,12 +15,6 @@ interface Reservation {
   endDate: Date;
 }
 
-interface DateRange {
-  startDate: Date;
-  endDate: Date;
-  key: string;
-}
-
 interface ReservationComponent {
   pricePerDay: number;
   listingId: string;
@@ -95,7 +89,7 @@ export const ReservationComponent = ({
         router.push("/bookings");
       }
       router.refresh();
-    } catch (error: unknown) {
+    } catch {
       return { ok: false, message: "missing fields" };
     }
   };

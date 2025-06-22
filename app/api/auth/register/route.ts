@@ -1,4 +1,4 @@
-import { hash, compare } from "bcryptjs";
+import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 const saltRounds = 2;
 export async function POST(request: Request) {

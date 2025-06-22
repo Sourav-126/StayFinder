@@ -4,8 +4,10 @@ import { categories } from "@/static/config";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Suspense } from "react";
 
-export default function CategoryHandler() {
+// Component that uses useSearchParams
+function CategoryHandlerContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeCat = searchParams.get("cat");
@@ -15,15 +17,16 @@ export default function CategoryHandler() {
     params.set("cat", cat);
     router.push(`?${params.toString()}`);
   };
+
   return (
-    <div className="flex  px-8 w-full justify-around  py-2 border-b border-gray-100  overflow-x-auto">
+    <div className="flex px-8 w-full justify-around py-2 border-b border-gray-100 overflow-x-auto">
       {categories.map((cat) => {
         return (
           <div
             onClick={() => setCategory(cat.label)}
             key={cat.label}
             className={cn(
-              "flex flex-col gap-1 items-center cursor-pointer hover:bg-gray-200/40  p-4  rounded-lg hover:text-red-400 ",
+              "flex flex-col gap-1 items-center cursor-pointer hover:bg-gray-200/40 p-4 rounded-lg hover:text-red-400",
               activeCat === cat.label && "bg-gray-100/40 text-red-400"
             )}
           >
@@ -33,5 +36,20 @@ export default function CategoryHandler() {
         );
       })}
     </div>
+  );
+}
+
+// Main component with Suspense boundary
+export default function CategoryHandler() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex px-8 w-full justify-around py-2 border-b border-gray-100 overflow-x-auto">
+          <div className="animate-pulse">Loading categories...</div>
+        </div>
+      }
+    >
+      <CategoryHandlerContent />
+    </Suspense>
   );
 }

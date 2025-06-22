@@ -2,7 +2,7 @@
 
 import { prisma } from "../utils/prisma";
 import { formatISO } from "date-fns";
-import { Listing } from "@prisma/client";
+import { Listing, Prisma } from "@prisma/client";
 
 interface SearchParams {
   locationValue?: string;
@@ -28,7 +28,7 @@ export async function getListings(
       cat,
     } = searchParams;
 
-    let query: any = {};
+    const query: Prisma.ListingWhereInput = {};
 
     if (locationvalue) query.locationvalue = locationvalue;
     if (guestCount) query.guestCount = { gte: +guestCount };
@@ -67,11 +67,10 @@ export async function getListings(
 
     const modifiedListings: Listing[] = listings.map((listing) => ({
       ...listing,
-      createdAt: listing.createdAt.toISOString() as any,
     }));
 
     return modifiedListings;
-  } catch (error: any) {
-    return { ok: false, message: error.message };
+  } catch {
+    return { ok: false, message: "Nothing done" };
   }
 }

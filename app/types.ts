@@ -21,7 +21,7 @@ export type Reservation = {
   endDate: Date;
   totalPrice: number;
   userId: string; // or string | null if schema allows
-  listingId: string;
+  listingId: string | null;
   Listing: Listing | null;
 };
 
@@ -32,3 +32,17 @@ export type SafeUser = {
   image?: string;
   favoriteIds?: string[];
 };
+
+export type CountrySelectValue = {
+  label: string;
+  value: string;
+  latlng: number[];
+  region: string;
+};
+
+export interface SessionUser {
+  id: string;
+  name?: string;
+  email?: string;
+  image?: string;
+}

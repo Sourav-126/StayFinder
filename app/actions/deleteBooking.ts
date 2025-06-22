@@ -1,8 +1,8 @@
 "use server";
 import { getUser } from "./getUser";
 import { prisma } from "../utils/prisma";
-
-export const deleteBooking = async (id) => {
+import type { SessionUser } from "../types";
+export const deleteBooking = async (id: string) => {
   const user = await getUser();
 
   if (!user) {
@@ -17,11 +17,11 @@ export const deleteBooking = async (id) => {
       id: id,
       OR: [
         {
-          userId: (user as any).id,
+          userId: (user as SessionUser).id,
         },
         {
           Listing: {
-            userId: (user as any).id,
+            userId: (user as SessionUser).id,
           },
         },
       ],

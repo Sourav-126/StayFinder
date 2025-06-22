@@ -21,7 +21,7 @@ export const getUser = async () => {
     }
 
     return currentUser;
-  } catch (error) {
+  } catch {
     return { ok: false, message: "User not Found", status: "401" };
   }
 };
