@@ -4,19 +4,25 @@ import useFavorite from "../../hooks/useFavorites";
 import { cn } from "@/lib/utils";
 import React from "react";
 
-function Favorite({ listingId, user, className, ...props }) {
+interface FavoriteProps extends React.SVGProps<SVGSVGElement> {
+  listingId: string;
+  user: {
+    id: string;
+    favoriteIds?: string[];
+  } | null;
+  className?: string;
+}
+
+function Favorite({ listingId, user, className, ...props }: FavoriteProps) {
   const { isFavorite, toggleFavorite } = useFavorite({
-    listingId: listingId,
-    user: user,
+    listingId,
+    user,
   });
 
   const color = isFavorite ? "red" : "black";
 
   return (
-    <div
-      onClick={toggleFavorite}
-      className={cn("classname of my own", className)}
-    >
+    <div onClick={toggleFavorite} className={cn("cursor-pointer", className)}>
       <svg
         width={40}
         height={40}

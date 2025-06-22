@@ -6,10 +6,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "./icons";
-import { Circle, CircleUserRound, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CircleUserRound, Search } from "lucide-react";
+import { useState } from "react";
 import { SearchModal } from "./searchModal";
-import { getAuthSession } from "../utils/auth";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -17,7 +16,7 @@ export default function Navbar() {
   const [modalStateStep, setModalStateStep] = useState(-1);
   const [session, setSession] = useState<unknown>(null);
 
-  const openSearchModalStep = (step) => {
+  const openSearchModalStep = (step: number) => {
     if (!isOpen) {
       setIsOpen(true);
       setModalStateStep(step);
@@ -27,10 +26,10 @@ export default function Navbar() {
     <div className="flex justify-between items-center px-5 md:px-16 sm:px-20 py-3 bg-muted border-b">
       <div className="logo flex gap-1">
         <Icons.logo className="w-6" />
-        <a href="/" className="text-red-400 font-semibold text-lg">
+        <Link href="/" className="text-red-400 font-semibold text-lg">
           {" "}
           StayFinder
-        </a>
+        </Link>
       </div>
       <div className="search_feature flex gap-3 items-center bg-white px-[6px] py-[7px] border-2 rounded-full">
         <div

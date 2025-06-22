@@ -3,11 +3,24 @@ import { getUser } from "@/app/actions/getUser";
 import ListingsCard from "@/app/_components/listings-card";
 import { notFound } from "next/navigation";
 import React from "react";
+import Link from "next/link";
+
+import type { SafeUser } from "@/app/types";
+
+const rawUser = await getUser();
 
 async function Favorites() {
-  const user = await getUser();
+  const rawUser = await getUser();
 
-  if (!user) notFound();
+  if (!rawUser || "ok" in rawUser) notFound();
+
+  const user: SafeUser = {
+    id: rawUser.id,
+    name: rawUser.name ?? undefined,
+    email: rawUser.email ?? undefined,
+    image: rawUser.image ?? undefined,
+    favoriteIds: rawUser.favoritesIds ?? [],
+  };
 
   const favoritesResponse = await getFavoriteListings();
   const favorites = favoritesResponse?.data?.filter((f) => f !== null) || [];
@@ -22,9 +35,12 @@ async function Favorites() {
           <p className="text-gray-600 mt-2 mb-4">
             Start exploring and add properties to your favorites
           </p>
-          <a href="/" className="underline text-blue-600 hover:text-blue-800">
+          <Link
+            href="/"
+            className="underline text-blue-600 hover:text-blue-800"
+          >
             Browse Properties
-          </a>
+          </Link>
         </div>
       </section>
     );
@@ -49,7 +65,7 @@ async function Favorites() {
             secondaryBtnLabel="Remove from Favorites"
             listing={{
               ...listing,
-              imageSrc: listing.imageSrc ?? "/fallback.jpg", // ✅ Safe default
+              imageSrc: listing.imageSrc ?? "/fallback.jpg",
             }}
             user={user}
           />

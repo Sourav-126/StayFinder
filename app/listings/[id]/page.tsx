@@ -5,8 +5,15 @@ import Image from "next/image";
 import { categories } from "../../../static/config";
 import { ReservationComponent } from "@/app/_components/reservation-component";
 import getReservationById from "@/app/actions/getReservations";
+import Link from "next/link";
 
-export default async function SingleListingPage({ params }) {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function SingleListingPage({ params }: PageProps) {
   const data = await getListingById(params.id);
   const reservations = await getReservationById(params.id);
   const { getByValue } = useCountries();
@@ -100,9 +107,9 @@ export default async function SingleListingPage({ params }) {
                   Cancellation, listing inaccuracies and other issues like
                   trouble
                 </p>
-                <a href="/" className="font-bold underline">
+                <Link href="/" className="font-bold underline">
                   Learn more
-                </a>
+                </Link>
               </div>
               <hr />
               {data.description && (

@@ -2,7 +2,13 @@ import { CircleMinus, CirclePlus } from "lucide-react";
 import { useCallback } from "react";
 
 //Give the types to the props
-export const Counter = ({ value, onChange }) => {
+export const Counter = ({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+}) => {
   const onAdd = useCallback(() => {
     onChange(value + 1);
   }, [onChange, value]);

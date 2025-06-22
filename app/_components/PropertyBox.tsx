@@ -1,4 +1,5 @@
 "use client";
+import { Listing } from "../types"; // adjust path
 
 import { toast } from "sonner";
 import { deleteProperty } from "../actions/deleteProperty";
@@ -6,7 +7,11 @@ import ListingsCard from "./listings-card";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-export const PropertyBox = ({ each }) => {
+type PropertyBoxProps = {
+  each: Listing;
+};
+
+export const PropertyBox = ({ each }: PropertyBoxProps) => {
   const router = useRouter();
 
   const handleDelete = useCallback(async () => {
@@ -19,8 +24,8 @@ export const PropertyBox = ({ each }) => {
       } else {
         toast.error("Something went wrong");
       }
-    } catch (error) {
-      toast.error("Error deleting property");
+    } catch {
+      return { ok: false, message: "Not done" };
     }
   }, [each.id, router]);
 
@@ -29,8 +34,11 @@ export const PropertyBox = ({ each }) => {
   return (
     <div>
       <ListingsCard
-        reservationsData={each}
-        listing={each}
+        reservationsData={{ price: each.price }}
+        listing={{
+          ...each,
+          imageSrc: each.imageSrc ?? undefined, // force undefined instead of null
+        }}
         showSecondaryBtn={true}
         secondaryBtnLabel="Delete this Property"
         onAction={handleDelete}

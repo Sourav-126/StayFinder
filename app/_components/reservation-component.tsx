@@ -8,12 +8,30 @@ import { IndianRupee } from "lucide-react";
 import { setReservation } from "../actions/reservation";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { RangeKeyDict } from "react-date-range";
+
+interface Reservation {
+  startDate: Date;
+  endDate: Date;
+}
+
+interface DateRange {
+  startDate: Date;
+  endDate: Date;
+  key: string;
+}
+
+interface ReservationComponent {
+  pricePerDay: number;
+  listingId: string;
+  reservation: Reservation[];
+}
 
 export const ReservationComponent = ({
   pricePerDay,
   listingId,
   reservation,
-}) => {
+}: ReservationComponent) => {
   const router = useRouter();
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
@@ -51,8 +69,16 @@ export const ReservationComponent = ({
     }
   }, [pricePerDay, dateRange]);
 
-  const handleDateChange = (ranges) => {
-    setDateRange(ranges.selection);
+  const handleDateChange = (ranges: RangeKeyDict) => {
+    const selection = ranges["selection"];
+
+    if (selection?.startDate && selection?.endDate) {
+      setDateRange({
+        startDate: selection.startDate,
+        endDate: selection.endDate,
+        key: "selection",
+      });
+    }
   };
 
   const handleReservation = async () => {
@@ -68,9 +94,8 @@ export const ReservationComponent = ({
         toast.success("Reservation Done!");
         router.push("/bookings");
       }
-      router;
-    } catch (error) {
-      toast.error("Uh, Oh Something went wrong!");
+      router.refresh();
+    } catch (error: unknown) {
       return { ok: false, message: "missing fields" };
     }
   };

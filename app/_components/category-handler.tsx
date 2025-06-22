@@ -11,7 +11,7 @@ export default function CategoryHandler() {
   const activeCat = searchParams.get("cat");
 
   const params = new URLSearchParams(searchParams.toString());
-  const setCategory = (cat) => {
+  const setCategory = (cat: string) => {
     params.set("cat", cat);
     router.push(`?${params.toString()}`);
   };

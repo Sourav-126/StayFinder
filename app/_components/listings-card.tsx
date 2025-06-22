@@ -6,42 +6,55 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Favorite from "./favoriteButton";
 import { useRouter } from "next/navigation";
+import { MouseEvent } from "react";
+
+type Listing = {
+  id: string;
+  imageSrc?: string;
+  title?: string;
+  price?: number;
+  locationvalue?: string;
+};
+
+type ReservationData = {
+  price: number;
+};
 
 type ListingCardProps = {
-  listing: {
-    id: string | undefined;
-    imageSrc: string | undefined;
-    title: string | undefined;
-    price: number | undefined;
-    locationvalue: string | undefined;
+  listing: Listing;
+  reservationsData?: ReservationData;
+  user?: {
+    id: string;
+    name?: string;
+    email?: string;
+    favoriteIds?: string[];
   };
-  reservationsData?: {
-    price: number | undefined;
-  };
-  user?: any;
   showSecondaryBtn?: boolean;
   secondaryBtnLabel?: string;
-  onAction?: (e: any) => void;
+  onAction?: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
 export default function ListingsCard({
   listing,
+  reservationsData,
+  user,
   showSecondaryBtn = false,
   secondaryBtnLabel,
-
-  ...props
+  onAction,
 }: ListingCardProps) {
   const { getByValue } = useCountries();
   const router = useRouter();
+
   const countryDetails = listing?.locationvalue
     ? getByValue(listing.locationvalue)
     : null;
+
   return (
     <div className="p-3 rounded shadow border border-gray-200 relative">
       <div className="w-full aspect-square rounded-lg overflow-hidden">
         <Image
           className="object-cover w-full h-full"
-          src={listing.imageSrc ? listing.imageSrc : "/placeholder.jpg"}
+          src={listing.imageSrc || "/placeholder.jpg"}
           width={400}
           height={400}
           alt="property listing"
@@ -51,18 +64,18 @@ export default function ListingsCard({
       <Favorite
         className="absolute top-6 right-6"
         listingId={listing.id}
-        user={props.user}
+        user={user ?? null}
       />
 
       <p className="font-semibold text-lg md:text-2xl capitalize pt-2">
         {listing.title || "Untitled Property"}
       </p>
 
-      {props.reservationsData ? (
-        <p>Paid {props.reservationsData.price} rupees per Night</p>
+      {reservationsData ? (
+        <p>Paid {reservationsData.price} rupees per Night</p>
       ) : (
         <p className="text-lg flex gap-1 items-center">
-          <IndianRupee size={16} /> {listing.price || "N/A"} per Night
+          <IndianRupee size={16} /> {listing.price ?? "N/A"} per Night
         </p>
       )}
 
@@ -78,8 +91,8 @@ export default function ListingsCard({
           View Property
         </Button>
 
-        {showSecondaryBtn && (
-          <Button onClick={props.onAction}>{secondaryBtnLabel}</Button>
+        {showSecondaryBtn && onAction && (
+          <Button onClick={onAction}>{secondaryBtnLabel}</Button>
         )}
       </div>
     </div>

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "../../utils/prisma";
 import { getAuthSession } from "../../utils/auth";
 import { PropertyBox } from "../../_components/PropertyBox";
+import Link from "next/link";
 
 export default async function PropertiesPage() {
   const session = await getAuthSession();
@@ -26,9 +27,9 @@ export default async function PropertiesPage() {
       <section className="h-screen grid place-items-center">
         <div className="text-center">
           <h1 className="font-semibold text-3xl">No Properties Found!</h1>
-          <a href="/become-a-host" className="underline">
+          <Link href="/become-a-host" className="underline">
             Make your Place a StayPlace With StayFinder
-          </a>
+          </Link>
         </div>
       </section>
     );

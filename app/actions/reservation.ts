@@ -25,7 +25,17 @@ export const getReservation = async () => {
   }
 };
 
-export async function setReservation({ listingId, startDate, endDate, price }) {
+export async function setReservation({
+  listingId,
+  startDate,
+  endDate,
+  price,
+}: {
+  listingId: string;
+  startDate: Date;
+  endDate: Date;
+  price: number;
+}) {
   const session = await getAuthSession();
   if (!session || !session.user) {
     return { ok: false, message: "Not permitted", status: 403 };
