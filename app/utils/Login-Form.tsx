@@ -23,7 +23,7 @@ interface LoginFormProps {
 
 export const LoginForm = ({ origin = "signin" }: LoginFormProps) => {
   const router = useRouter();
-  const [, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -33,31 +33,33 @@ export const LoginForm = ({ origin = "signin" }: LoginFormProps) => {
     },
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     setLoading(true);
+
     try {
       if (origin.toLowerCase() === "signin") {
-        signIn("credentials", { ...data, redirect: true }).then((callback) => {
-          if (callback?.ok) {
-            toast.success("Logged in Successfully!");
-            router.push("/");
-            router.refresh();
-          } else if (callback?.error) {
-            console.log(callback.error);
-            toast.error("Login failed.");
-          }
+        // Remove redirect: true to handle redirect manually
+        const result = await signIn("credentials", {
+          ...data,
+          redirect: false, // Changed to false
         });
+
+        if (result?.ok && !result?.error) {
+          toast.success("Logged in Successfully!");
+          router.push("/");
+          router.refresh();
+        } else {
+          console.log("Sign in error:", result?.error);
+          toast.error(result?.error || "Login failed.");
+        }
       } else {
-        axios
-          .post("/api/auth/register", data)
-          .then(() => {
-            toast.success("Welcome to StayFinder");
-            router.push("/");
-          })
-          .catch(() => toast.error("Registration failed."));
+        await axios.post("/api/auth/register", data);
+        toast.success("Welcome to StayFinder");
+        router.push("/");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Authentication error:", error);
+      toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -82,13 +84,15 @@ export const LoginForm = ({ origin = "signin" }: LoginFormProps) => {
         <Button
           onClick={handleSubmit(onSubmit)}
           className="w-full cursor-pointer"
+          disabled={loading}
         >
-          {origin === "Signup" ? "Signup" : "Signin"}
+          {loading ? "Loading..." : origin === "Signup" ? "Signup" : "Signin"}
         </Button>
         <Button
           onClick={() => signIn("google")}
           className="w-full cursor-pointer"
           type="button"
+          disabled={loading}
         >
           <Icons.Google />
           {origin === "Signup" ? "Sign-up with Google" : "Sign-in with Google"}

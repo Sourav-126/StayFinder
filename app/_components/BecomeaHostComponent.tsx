@@ -56,12 +56,9 @@ export default function BecomeAHostComponent() {
     },
   });
 
-  const setCustomValue = <T extends keyof FormSchema>(
-    field: T,
-    value: FormSchema[T]
-  ) => {
-    setValue("location", value as CountrySelectValue | null);
-    setValue("price", value as number | null);
+  // Fixed setCustomValue function - properly typed and handles each field
+  const setCustomValue = (field: keyof FormSchema, value: any) => {
+    setValue(field, value);
   };
 
   const category = watch("category");
@@ -113,6 +110,7 @@ export default function BecomeAHostComponent() {
       router.push("/properties");
     } catch (error) {
       console.error("Error creating listing:", error);
+      toast.error("Failed to create listing");
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +136,9 @@ export default function BecomeAHostComponent() {
   let sourceAtStep;
   if (step === STEPS.CATEGORY) {
     sourceAtStep = (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 pb-24">
+        {" "}
+        {/* Added padding bottom for fixed buttons */}
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           Which of this category defines your Property?
         </h1>
@@ -147,16 +147,19 @@ export default function BecomeAHostComponent() {
           {categories.map((each) => (
             <div
               key={each.label}
-              onClick={() => setCustomValue("category", each.label)}
+              onClick={() => {
+                console.log("Category clicked:", each.label); // Debug log
+                setCustomValue("category", each.label);
+              }}
               className={cn(
-                "bg-gray-100 flex flex-col p-5 rounded-lg border-gray-300/10 cursor-pointer",
+                "bg-gray-100 flex flex-col p-5 rounded-lg border-2 cursor-pointer hover:border-red-400 transition-colors",
                 category === each.label
-                  ? "bg-red-400/80 text-white"
-                  : "bg-gray-100"
+                  ? "bg-red-400/80 text-white border-red-400"
+                  : "bg-gray-100 border-gray-300"
               )}
             >
-              <each.icon />
-              {each.label}
+              <each.icon className="mb-2" />
+              <span className="text-sm font-medium">{each.label}</span>
             </div>
           ))}
         </div>
@@ -164,7 +167,7 @@ export default function BecomeAHostComponent() {
     );
   } else if (step === STEPS.LOCATION) {
     sourceAtStep = (
-      <div>
+      <div className="pb-24">
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           Where is your property based out of?
         </h1>
@@ -176,42 +179,42 @@ export default function BecomeAHostComponent() {
     );
   } else if (step === STEPS.INFO) {
     sourceAtStep = (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 pb-24">
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           Choose your preferences
         </h1>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many rooms do you want?
             </h3>
-            <p>Choose a room count</p>
+            <p className="text-gray-500">Choose a room count</p>
           </span>
           <Counter
             value={roomCount}
             onChange={(value) => setCustomValue("roomCount", value)}
           />
         </div>
-        <div className="w-full h-[0.4px] bg-gray-800 my-10" />
-        <div className="flex justify-between">
+        <div className="w-full h-[0.4px] bg-gray-300 my-6" />
+        <div className="flex justify-between items-center">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many Children do you have?
             </h3>
-            <p>Choose a children Count</p>
+            <p className="text-gray-500">Choose a children count</p>
           </span>
           <Counter
             value={childCount}
             onChange={(value) => setCustomValue("childCount", value)}
           />
         </div>
-        <div className="w-full h-[0.4px] bg-gray-800 my-10" />
-        <div className="flex justify-between">
+        <div className="w-full h-[0.4px] bg-gray-300 my-6" />
+        <div className="flex justify-between items-center">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many Adults are planning to join?
             </h3>
-            <p>Choose a guest count</p>
+            <p className="text-gray-500">Choose a guest count</p>
           </span>
           <Counter
             value={guestCount}
@@ -222,12 +225,20 @@ export default function BecomeAHostComponent() {
     );
   } else if (step === STEPS.IMAGES) {
     sourceAtStep = (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 pb-24">
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           Upload a great image of your property
         </h1>
         {imageSrc && (
-          <Image src={imageSrc} width={500} height={350} alt="Property image" />
+          <div className="relative w-full max-w-md mx-auto">
+            <Image
+              src={imageSrc}
+              width={500}
+              height={350}
+              alt="Property image"
+              className="rounded-lg object-cover"
+            />
+          </div>
         )}
         <ImageUpload
           value={imageSrc}
@@ -237,41 +248,53 @@ export default function BecomeAHostComponent() {
     );
   } else if (step === STEPS.DESCRIPTION) {
     sourceAtStep = (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 pb-24">
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           A bit of Details on your Property
         </h1>
-        <Input placeholder="title about your Property" {...register("title")} />
+        <Input
+          placeholder="Title about your Property"
+          {...register("title")}
+          className="text-base"
+        />
         <Textarea
           placeholder="What is the story behind your property"
           {...register("description")}
+          className="min-h-[120px] text-base"
         />
       </div>
     );
   } else if (step === STEPS.PRICE) {
     sourceAtStep = (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 pb-24">
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           How much do you charge for your property per Night?
         </h1>
-        <Input
-          placeholder="e.g 1000"
-          type="number"
-          {...register("price", { valueAsNumber: true })}
-        />
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg">
+            ₹
+          </span>
+          <Input
+            placeholder="e.g 1000"
+            type="number"
+            className="pl-8 text-base"
+            {...register("price", { valueAsNumber: true })}
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <section>
+    <section className="min-h-screen p-6">
       {sourceAtStep}
-      <div className="w-full flex flex-col fixed bottom-0">
-        <div className="flex justify-between px-8 pb-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+        <div className="flex justify-between items-center px-8 py-4">
           {step > 0 ? (
             <button
               className="p-4 bg-red-400 rounded-full cursor-pointer hover:bg-red-500 transition-colors"
               onClick={onLeftClick}
+              type="button"
             >
               <ArrowLeft size="20" className="text-white" />
             </button>
@@ -283,14 +306,15 @@ export default function BecomeAHostComponent() {
             onClick={
               step === STEPS.PRICE ? handleSubmit(onSubmit) : onRightClick
             }
-            className="p-4 bg-red-400 rounded-full cursor-pointer hover:bg-red-500 transition-colors disabled:bg-gray-400"
+            className="p-4 bg-red-400 rounded-full cursor-pointer hover:bg-red-500 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={!isStepValid || isLoading}
+            type="button"
           >
             {nextLabel}
           </button>
         </div>
         <div
-          className="progress-bar bg-red-400 h-[4px]"
+          className="progress-bar bg-red-400 h-[4px] transition-all duration-300"
           style={{
             width: `${((step + 1) / Object.keys(STEPS).length) * 100}%`,
           }}

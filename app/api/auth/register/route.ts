@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
   const hashedPass = await hash(password, saltRounds);
   try {
-    const user = await prisma?.user.create({
+    const user = await prisma.user.create({
       data: {
         name: name,
         email: email,
