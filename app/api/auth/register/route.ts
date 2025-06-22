@@ -1,5 +1,6 @@
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
+import { prisma } from "../../../utils/prisma";
 const saltRounds = 2;
 export async function POST(request: Request) {
   const body = await request.json();
