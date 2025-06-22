@@ -9,6 +9,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { toast } from "sonner";
 export const LoginForm = ({ origin = "signIn" }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -24,9 +25,12 @@ export const LoginForm = ({ origin = "signIn" }) => {
     setLoading(true);
     try {
       if (origin == "signin") {
-        signIn("credentials", { ...data, redirect: false }).then((callback) => {
+        signIn("credentials", { ...data, redirect: true }).then((callback) => {
           if (callback?.ok) {
             console.log("Logged In Successfully");
+            toast.success("Logged in Successfully!");
+            router.push("/");
+
             router.refresh();
           } else if (callback?.error) {
             console.log(callback.error);
@@ -34,9 +38,11 @@ export const LoginForm = ({ origin = "signIn" }) => {
           }
         });
       } else {
-        axios
-          .post("http://localhost:3000/api/auth/register", data)
-          .then(() => [console.log("user created Hopefully")]);
+        axios.post("http://localhost:3000/api/auth/register", data).then(() => {
+          console.log("user created Hopefully");
+          toast.success("Welcome to StayFinder");
+          router.push("/");
+        });
       }
     } catch (error) {
       console.error(error);

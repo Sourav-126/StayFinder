@@ -45,12 +45,20 @@ export default async function Home({ searchParams }) {
     );
   }
 
+  console.log(listings);
+
   return (
     <section className="">
       <CategoryHandler />
       <div className="grid grid-cols-2 md:grid-cols-6 gap-6 p-4 md:p-8">
         {listings.map((listing) => {
-          return <ListingsCard key={listing.id} listing={listing} />;
+          return (
+            <ListingsCard
+              key={listing.id}
+              listing={listing}
+              secondaryBtnLabel=""
+            />
+          );
         })}
       </div>
     </section>

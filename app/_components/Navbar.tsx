@@ -7,12 +7,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "./icons";
 import { Circle, CircleUserRound, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchModal } from "./searchModal";
+import { getAuthSession } from "../utils/auth";
 import Link from "next/link";
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalStateStep, setModalStateStep] = useState(-1);
+  const [session, setSession] = useState<unknown>(null);
+
   const openSearchModalStep = (step) => {
     if (!isOpen) {
       setIsOpen(true);
@@ -79,8 +83,10 @@ export default function Navbar() {
 const UserComponent = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <CircleUserRound />
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <CircleUserRound className="h-8 w-8 text-gray-600" />
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem className="cursor-pointer">

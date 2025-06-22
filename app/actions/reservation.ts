@@ -16,7 +16,7 @@ export const getReservation = async () => {
         userId: (session.user as any).id,
       },
       include: {
-        listing: true,
+        Listing: true,
       },
     });
     return reservation;

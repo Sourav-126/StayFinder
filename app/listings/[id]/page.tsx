@@ -10,6 +10,10 @@ export default async function SingleListingPage({ params }) {
   const data = await getListingById(params.id);
   const reservations = await getReservationById(params.id);
   const { getByValue } = useCountries();
+  if (!reservations) {
+    console.log("null reservation");
+    return null;
+  }
 
   if (data) {
     const country = getByValue(data.locationvalue);
@@ -96,7 +100,7 @@ export default async function SingleListingPage({ params }) {
                   Cancellation, listing inaccuracies and other issues like
                   trouble
                 </p>
-                <a href="/learnmore" className="font-bold underline">
+                <a href="/" className="font-bold underline">
                   Learn more
                 </a>
               </div>

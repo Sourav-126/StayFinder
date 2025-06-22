@@ -6,19 +6,13 @@ import { BookedCard } from "@/app/_components/bookedCard";
 export default async function Bookings() {
   const user = await getUser();
   const data = await getReservation();
+  console.log(data);
 
   if (!user) notFound();
 
   // Check if data is an error response
-  if (!data || "ok" in data) {
-    return (
-      <div>
-        <p>No reservations found or error loading reservations.</p>
-      </div>
-    );
-  }
 
-  if (data.length == 0) {
+  if (!data || "ok" in data || data.length == 0) {
     return (
       <section className="h-screen grid place-items-center">
         <div className="text-center">
@@ -30,6 +24,7 @@ export default async function Bookings() {
       </section>
     );
   }
+  console.log(data);
 
   return (
     <div className="p-4 md:p-8">

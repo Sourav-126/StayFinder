@@ -134,8 +134,9 @@ export const SearchModal = ({ isOpen, setIsOpen, stepAt }) => {
                 <Button
                   onClick={onNext}
                   className={
-                    step === Object.keys(STEPS).length - 1 &&
-                    "bg-red-400 hover:bg-red-300"
+                    step === Object.keys(STEPS).length - 1
+                      ? "bg-red-400 hover:bg-red-300"
+                      : "bg-zinc-300"
                   }
                 >
                   {labelForLastButton}
