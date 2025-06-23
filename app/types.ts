@@ -1,4 +1,3 @@
-// types.ts
 export type Listing = {
   id: string;
   createdAt: string;
@@ -20,7 +19,7 @@ export type Reservation = {
   startDate: Date;
   endDate: Date;
   totalPrice: number;
-  userId: string; // or string | null if schema allows
+  userId: string;
   listingId: string | null;
   Listing: Listing | null;
 };

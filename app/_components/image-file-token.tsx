@@ -4,7 +4,7 @@ import React from "react";
 import { uploadToBlob } from "../utils/uploadToBlob";
 
 type ImageUploadProps = {
-  value?: string; // optional if you want to support preview
+  value?: string;
   returnUrl: (url: string) => void;
 };
 

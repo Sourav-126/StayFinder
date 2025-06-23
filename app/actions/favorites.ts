@@ -4,7 +4,7 @@ import { getUser } from "./getUser";
 
 export async function getFavoriteListings() {
   const user = await getUser();
-  // Check if user is an error response or null
+
   if (!user || "ok" in user) {
     return { ok: false, message: "Not authenticated", status: "403" };
   }
@@ -12,7 +12,7 @@ export async function getFavoriteListings() {
     const favoriteListings = await prisma.listing.findMany({
       where: {
         id: {
-          in: [...(user.favoritesIds || [])], // Fixed: matches schema favoritesIds
+          in: [...(user.favoritesIds || [])],
         },
       },
     });

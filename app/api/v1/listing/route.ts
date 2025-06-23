@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     description,
     roomCount,
     childCount,
-    guestCount, // Fixed typo: was guesCount
+    guestCount,
     location,
     price,
     imageSrc,

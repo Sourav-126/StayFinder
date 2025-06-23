@@ -51,7 +51,6 @@ export const BookedCard: React.FC<BookedCardProps> = ({ reservation }) => {
     }
   };
 
-  // Guard against null Listing
   if (!reservation?.Listing) {
     return (
       <div className="border p-4 rounded text-center text-sm text-gray-600">

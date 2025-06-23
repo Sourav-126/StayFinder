@@ -150,7 +150,7 @@ export default function BecomeAHostComponent() {
             <div
               key={each.label}
               onClick={() => {
-                console.log("Category clicked:", each.label); // Debug log
+                console.log("Category clicked:", each.label);
                 setCustomValue("category", each.label);
               }}
               className={cn(

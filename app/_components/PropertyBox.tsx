@@ -1,5 +1,5 @@
 "use client";
-import { Listing } from "../types"; // adjust path
+import { Listing } from "../types";
 
 import { toast } from "sonner";
 import { deleteProperty } from "../actions/deleteProperty";
@@ -37,7 +37,7 @@ export const PropertyBox = ({ each }: PropertyBoxProps) => {
         reservationsData={{ price: each.price }}
         listing={{
           ...each,
-          imageSrc: each.imageSrc ?? undefined, // force undefined instead of null
+          imageSrc: each.imageSrc ?? undefined,
         }}
         showSecondaryBtn={true}
         secondaryBtnLabel="Delete this Property"

@@ -24,7 +24,6 @@ interface SearchModalProps {
   stepAt?: Step;
 }
 
-// Separate component that uses useSearchParams
 const SearchModalContent: React.FC<SearchModalProps> = ({
   isOpen,
   setIsOpen,
@@ -150,7 +149,6 @@ const SearchModalContent: React.FC<SearchModalProps> = ({
   ) : null;
 };
 
-// Main component with Suspense boundary
 export const SearchModal: React.FC<SearchModalProps> = (props) => {
   return (
     <Suspense fallback={<div>Loading search...</div>}>

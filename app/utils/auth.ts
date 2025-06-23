@@ -77,5 +77,4 @@ export const authOptions: AuthOptions = {
   },
 };
 
-// Helper to get server session with correct types
 export const getAuthSession = () => getServerSession(authOptions);

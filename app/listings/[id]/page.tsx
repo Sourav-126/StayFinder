@@ -15,7 +15,7 @@ type PageProps = {
 
 export default function SingleListingPageWrapper({ params }: PageProps) {
   const { getByValue } = useCountries();
-  const resolvedParams = use(params); // Use React's `use()` hook to resolve the Promise
+  const resolvedParams = use(params);
 
   return (
     <SingleListingPage id={resolvedParams.id} getCountryByValue={getByValue} />

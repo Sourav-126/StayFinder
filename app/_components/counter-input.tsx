@@ -1,7 +1,6 @@
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { useCallback } from "react";
 
-//Give the types to the props
 export const Counter = ({
   value,
   onChange,

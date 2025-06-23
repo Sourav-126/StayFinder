@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Suspense } from "react";
 
-// Component that uses useSearchParams
+
 function CategoryHandlerContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -39,7 +39,6 @@ function CategoryHandlerContent() {
   );
 }
 
-// Main component with Suspense boundary
 export default function CategoryHandler() {
   return (
     <Suspense
