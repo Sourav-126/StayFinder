@@ -56,7 +56,10 @@ export default function BecomeAHostComponent() {
     },
   });
 
-  const setCustomValue = (field: keyof FormSchema, value: any) => {
+  const setCustomValue = (
+    field: keyof FormSchema,
+    value: FormSchema[keyof FormSchema]
+  ) => {
     setValue(field, value);
   };
 
