@@ -4,8 +4,7 @@ import { getListings } from "./actions/getListings";
 import { Metadata } from "next";
 import { getUser } from "./actions/getUser";
 import { SafeUser } from "./types";
-import { notFound } from "next/navigation";
-
+import { notFound, redirect } from "next/navigation";
 export const metadata: Metadata = {
   title: "StayFinder",
 };
@@ -34,12 +33,13 @@ interface ParsedParams {
 }
 
 export default async function Home({ searchParams }: Props) {
-  // Await the searchParams Promise
   const resolvedSearchParams = await searchParams;
 
   const rawUser = await getUser();
 
-  if (!rawUser || "ok" in rawUser) notFound();
+  if (!rawUser || "ok" in rawUser || !rawUser.id) {
+    redirect("/sign-up");
+  }
 
   const user: SafeUser = {
     id: rawUser.id,

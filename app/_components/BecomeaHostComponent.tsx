@@ -56,7 +56,6 @@ export default function BecomeAHostComponent() {
     },
   });
 
-  // Fixed setCustomValue function - properly typed and handles each field
   const setCustomValue = (field: keyof FormSchema, value: any) => {
     setValue(field, value);
   };

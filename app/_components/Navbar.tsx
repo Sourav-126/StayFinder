@@ -96,12 +96,6 @@ const UserComponent = () => {
         <DropdownMenuItem className="cursor-pointer">
           <Link href="/properties">My Properties</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          <Link href="/sign-in">Login</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          <Link href="/sign-up"> Register </Link>
-        </DropdownMenuItem>
         <hr />
         <DropdownMenuItem className="cursor-pointer">
           <Link href="/become-a-host"> StayPlace Your Home!</Link>
