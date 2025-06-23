@@ -220,15 +220,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-**Your Name** - [@your-twitter](https://twitter.com/your-twitter) - your.email@example.com
+**Your Name** - [@Sourav_Arora]([(https://x.com/Sourav_Arora_)]) - souravarora285@gmail.com
 
-**Project Link** - [https://github.com/username/stayfinder](https://github.com/username/stayfinder)
+**Project Link** - [https://github.com/Sourav-126/stayfinder](https://github.com/Sourav-126/stayfinder)
 
-**Live Demo** - [https://stayfinder.vercel.app](https://stayfinder.vercel.app)
+**Live Demo** - [[https://stay-finder-dusky.vercel.app](https://stay-finder-dusky.vercel.app/)]
 
 ---
 
 <div align="center">
-  <p>Made with ❤️ by [Your Name]</p>
+  <p>Made with ❤️ by Sourav Arora</p>
   <p>⭐ Star this repository if you found it helpful!</p>
 </div>
