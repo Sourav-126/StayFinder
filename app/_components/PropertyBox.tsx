@@ -29,8 +29,6 @@ export const PropertyBox = ({ each }: PropertyBoxProps) => {
     }
   }, [each.id, router]);
 
-  console.log(each);
-
   return (
     <div>
       <ListingsCard

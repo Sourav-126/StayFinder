@@ -22,7 +22,6 @@ export async function POST(request: Request) {
     });
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.log("Error while Signing up", error);
     return NextResponse.json("Failed", { status: 500 });
   }
 }

@@ -48,7 +48,6 @@ export const LoginForm = ({ origin = "signin" }: LoginFormProps) => {
           router.push("/");
           router.refresh();
         } else {
-          console.log("Sign in error:", result?.error);
           toast.error(result?.error || "Login failed.");
         }
       } else {
