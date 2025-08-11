@@ -48,7 +48,7 @@ export default function Navbar() {
         >
           Date
         </div>
-        <div className="bg-gray-400 h-[20px] w-[0.7px] "></div>
+        <div className="bg-gray-800 h-[20px] w-[0.7px]"></div>
 
         <div
           className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"

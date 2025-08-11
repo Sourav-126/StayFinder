@@ -40,7 +40,7 @@ export const LoginForm = ({ origin = "signin" }: LoginFormProps) => {
       if (origin.toLowerCase() === "signin") {
         const result = await signIn("credentials", {
           ...data,
-          redirect: false,
+          redirect: true,
         });
 
         if (result?.ok && !result?.error) {
