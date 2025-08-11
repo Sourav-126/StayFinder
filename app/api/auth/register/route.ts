@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       },
     });
     return NextResponse.json(user, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json("Failed", { status: 500 });
   }
 }
