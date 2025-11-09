@@ -1,5 +1,5 @@
 "use client";
-
+import { Listing } from "../types";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { categories } from "@/static/config";
@@ -10,11 +10,22 @@ import { Counter } from "./counter-input";
 import ImageUpload from "./image-file-token";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { CountrySelect } from "./country-select";
 import { CountrySelectValue } from "../types";
-import { CountrySelect } from "../_components/country-select";
+interface ListingFormData {
+  title: string;
+  category: string;
+  location: CountrySelectValue | null;
+  description: string;
+  roomCount: number;
+  childCount: number;
+  guestCount: number;
+  imageSrc: string;
+  price: number | null;
+  isApproved?: boolean;
+}
 
 const STEPS = {
   CATEGORY: 0,
@@ -25,24 +36,18 @@ const STEPS = {
   PRICE: 5,
 };
 
-type FormSchema = {
-  title: string;
-  category: string;
-  location: CountrySelectValue | null;
-  description: string;
-  roomCount: number;
-  childCount: number;
-  guestCount: number;
-  imageSrc: string;
-  price: number | null;
-};
-
-export default function BecomeAHostComponent() {
+export const BecomeAHostComponent = () => {
   const router = useRouter();
   const [step, setStep] = useState(STEPS.CATEGORY);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { register, handleSubmit, setValue, watch } = useForm<FormSchema>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { isSubmitting: formSubmitting },
+  } = useForm<ListingFormData>({
     defaultValues: {
       title: "",
       category: "",
@@ -53,12 +58,13 @@ export default function BecomeAHostComponent() {
       guestCount: 2,
       imageSrc: "",
       price: null,
+      isApproved: false,
     },
   });
 
   const setCustomValue = (
-    field: keyof FormSchema,
-    value: FormSchema[keyof FormSchema]
+    field: keyof ListingFormData,
+    value: ListingFormData[keyof ListingFormData]
   ) => {
     setValue(field, value);
   };
@@ -104,17 +110,30 @@ export default function BecomeAHostComponent() {
 
   const onLeftClick = () => setStep((prev) => prev - 1);
 
-  const onSubmit = async (data: FormSchema) => {
+  const onSubmit = async (data: ListingFormData) => {
     try {
-      setIsLoading(true);
-      await axios.post(`/api/v1/listing`, data);
-      toast.success("Listing Created Successfully");
-      router.push("/properties");
+      setIsSubmitting(true);
+      const response = await fetch("/api/v1/listing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        toast.success(
+          "Property submitted for approval. You will receive confirmation soon.",
+          { duration: 4000 }
+        );
+        router.push("/");
+      } else {
+        toast.error(responseData.error || "Something went wrong");
+      }
     } catch (error) {
-      console.error("Error creating listing:", error);
-      toast.error("Failed to create listing");
+      toast.error("Failed to submit property");
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -127,20 +146,19 @@ export default function BecomeAHostComponent() {
   const nextLabel = useMemo(() => {
     return step === STEPS.PRICE ? (
       <span className="flex flex-row gap-2 items-center text-white font-semibold text-md">
-        {isLoading ? "Creating..." : "List"}
+        {isSubmitting ? "Submitting..." : "List"}
         <ArrowRight size="20" className="text-white" />
       </span>
     ) : (
       <ArrowRight size="20" className="text-white" />
     );
-  }, [step, isLoading]);
+  }, [step, isSubmitting]);
 
   let sourceAtStep;
   if (step === STEPS.CATEGORY) {
     sourceAtStep = (
       <div className="flex flex-col gap-3 pb-24">
         {" "}
-        {/* Added padding bottom for fixed buttons */}
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           Which of this category defines your Property?
         </h1>
@@ -308,7 +326,7 @@ export default function BecomeAHostComponent() {
               step === STEPS.PRICE ? handleSubmit(onSubmit) : onRightClick
             }
             className="p-4 bg-red-400 rounded-full cursor-pointer hover:bg-red-500 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-            disabled={!isStepValid || isLoading}
+            disabled={!isStepValid || isSubmitting}
             type="button"
           >
             {nextLabel}
@@ -323,4 +341,4 @@ export default function BecomeAHostComponent() {
       </div>
     </section>
   );
-}
+};

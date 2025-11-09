@@ -1,8 +1,12 @@
 "use server";
 
+import { ListingType } from "../types";
 import { prisma } from "../utils/prisma";
-export default async function getListingById(listingId: string) {
-  const listing = await prisma.listing.findUnique({
+
+export default async function getListingById(
+  listingId: string
+): Promise<ListingType | null> {
+  const listing = await prisma.listing.findFirst({
     where: {
       id: listingId,
     },
@@ -16,5 +20,5 @@ export default async function getListingById(listingId: string) {
     },
   });
 
-  return listing;
+  return listing as ListingType | null;
 }

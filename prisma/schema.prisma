@@ -29,14 +29,16 @@ model User {
 }
 
 model Listing {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  User          User?    @relation(fields: [userId], references: [id])
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  User          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title         String
   description   String?
   imageSrc      String?
   category      String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isApproved    Boolean   @default(false)
+  adminApproved DateTime?
   roomCount     Int
   childCount    Int
   guestCount    Int

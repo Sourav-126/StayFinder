@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "../utils/prisma";
+import { prisma } from "@/app/utils/prisma";
 import { formatISO } from "date-fns";
 import { Listing, Prisma } from "@prisma/client";
 
@@ -59,7 +59,17 @@ export async function getListings(
     }
 
     const listings = await prisma.listing.findMany({
-      where: query,
+      include: {
+        User: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
+      where: {
+        isApproved: true,
+      },
       orderBy: {
         createdAt: "desc",
       },

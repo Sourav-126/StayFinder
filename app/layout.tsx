@@ -3,6 +3,7 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import Navbar from "./_components/Navbar";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,7 +24,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
         <Navbar />
-        {children}
+        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         <Toaster />
       </body>
     </html>

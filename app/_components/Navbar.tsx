@@ -6,10 +6,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "./icons";
-import { CircleUserRound, Search } from "lucide-react";
+import { CircleUserRound, LogOut, Search } from "lucide-react";
 import { useState } from "react";
 import { SearchModal } from "./searchModal";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 type Step = 0 | 1 | 2;
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -99,6 +100,15 @@ const UserComponent = () => {
         <hr />
         <DropdownMenuItem className="cursor-pointer">
           <Link href="/become-a-host"> StayPlace Your Home!</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => signOut({ callbackUrl: "/sign-in" })}
+        >
+          <div className="flex gap-2">
+            <LogOut />
+            Logout
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

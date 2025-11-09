@@ -1,6 +1,7 @@
 import getListingById from "@/app/actions/getListingById";
 import getReservationById from "@/app/actions/getReservations";
 import { ReservationComponent } from "@/app/_components/reservation-component";
+import { PendingApprovalBanner } from "@/app/_components/PendingApprovalBanner";
 import { categories } from "../../../static/config";
 import { Baby, House, IndianRupee, UserRound } from "lucide-react";
 import Image from "next/image";
@@ -157,6 +158,7 @@ async function SingleListingPage({
             </div>
           </div>
         </div>
+        {!data.isApproved && <PendingApprovalBanner />}
       </div>
     );
   }

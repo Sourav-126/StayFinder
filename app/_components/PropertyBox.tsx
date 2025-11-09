@@ -7,11 +7,17 @@ import ListingsCard from "./listings-card";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-type PropertyBoxProps = {
+interface PropertyBoxProps {
   each: Listing;
-};
+  isApproved?: boolean;
+  adminApproved?: Date | null;
+}
 
-export const PropertyBox = ({ each }: PropertyBoxProps) => {
+export const PropertyBox = ({
+  each,
+  isApproved,
+  adminApproved,
+}: PropertyBoxProps) => {
   const router = useRouter();
 
   const handleDelete = useCallback(async () => {
@@ -30,7 +36,7 @@ export const PropertyBox = ({ each }: PropertyBoxProps) => {
   }, [each.id, router]);
 
   return (
-    <div>
+    <div className="relative">
       <ListingsCard
         reservationsData={{ price: each.price }}
         listing={{
@@ -41,6 +47,17 @@ export const PropertyBox = ({ each }: PropertyBoxProps) => {
         secondaryBtnLabel="Delete this Property"
         onAction={handleDelete}
       />
+
+      {isApproved === false && (
+        <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">
+          Pending Approval
+        </div>
+      )}
+      {isApproved && (
+        <div className="absolute top-2 right-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
+          Approved
+        </div>
+      )}
     </div>
   );
 };

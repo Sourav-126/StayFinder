@@ -1,6 +1,7 @@
 import { getAuthSession } from "@/app/utils/auth";
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/utils/prisma";
+import { sendAdminApprovalEmail } from "@/app/utils/email-service";
 import { SessionUser } from "@/app/types";
 
 export async function POST(request: Request) {
@@ -36,8 +37,11 @@ export async function POST(request: Request) {
         price: parseInt(price),
         locationvalue: location.value,
         userId: (session.user as SessionUser).id,
+        isApproved: false,
       },
     });
+
+    await sendAdminApprovalEmail(newListing);
 
     return NextResponse.json(
       { message: "Listing Created", listing: newListing },

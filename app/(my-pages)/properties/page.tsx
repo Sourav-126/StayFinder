@@ -37,12 +37,26 @@ export default async function PropertiesPage() {
   }
 
   return (
-    <div className="p-4 md:p-8 gap-y-2">
-      <h1 className="font-bold text-xl md:text-3xl">Your Properties 🏡</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mt-4">
-        {safePropertiesList.map((each) => (
-          <PropertyBox key={each.id} each={each} />
-        ))}
+    <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+      <div className="pt-28">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
+          {safePropertiesList.map((listing: any) => (
+            <PropertyBox
+              key={listing.id}
+              {...listing}
+              showApprovalStatus={true}
+            />
+          ))}
+        </div>
+
+        {safePropertiesList.length === 0 && (
+          <div className="text-center mt-10">
+            <h3 className="text-lg font-semibold">No properties found</h3>
+            <p className="text-gray-500">
+              Start by listing your first property
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { getAuthSession } from "../utils/auth";
 import Link from "next/link";
-import BecomeAHostComponent from "../_components/BecomeaHostComponent";
+import { BecomeAHostComponent } from "../_components/BecomeaHostComponent";
 
 async function BecomeAHost() {
   const session = await getAuthSession();
