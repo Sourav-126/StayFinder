@@ -69,6 +69,7 @@ export async function getListings(
       },
       where: {
         isApproved: true,
+        ...query,
       },
       orderBy: {
         createdAt: "desc",
@@ -80,7 +81,8 @@ export async function getListings(
     }));
 
     return modifiedListings;
-  } catch {
-    return { ok: false, message: "Nothing done" };
+  } catch (error: any) {
+    console.error("Error in getListings:", error);
+    return { ok: false, message: error?.message || "Nothing done" };
   }
 }

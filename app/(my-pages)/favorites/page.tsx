@@ -1,7 +1,10 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { getFavoriteListings } from "@/app/actions/favorites";
 import { getUser } from "@/app/actions/getUser";
 import ListingsCard from "@/app/_components/listings-card";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import React from "react";
 import Link from "next/link";
 
@@ -10,7 +13,9 @@ import type { SafeUser } from "@/app/types";
 async function Favorites() {
   const rawUser = await getUser();
 
-  if (!rawUser || "ok" in rawUser) notFound();
+  if (!rawUser || "ok" in rawUser) {
+    redirect("/sign-in");
+  }
 
   const user: SafeUser = {
     id: rawUser.id,

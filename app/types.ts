@@ -13,7 +13,7 @@ export type Listing = {
   locationvalue: string;
   price: number;
   isApproved: boolean;
-  adminApproved: Date;
+  adminApproved: Date | null;
 };
 
 export type Reservation = {

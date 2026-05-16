@@ -1,19 +1,24 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import React from "react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { prisma } from "../../utils/prisma";
-import { getAuthSession } from "../../utils/auth";
+import { getUser } from "@/app/actions/getUser";
 import { PropertyBox } from "../../_components/PropertyBox";
 import Link from "next/link";
 import type { SessionUser } from "@/app/types";
 
 export default async function PropertiesPage() {
-  const session = await getAuthSession();
+  const user = await getUser();
 
-  if (!session) notFound();
+  if (!user || "ok" in user) {
+    redirect("/sign-in");
+  }
 
   const propertiesList = await prisma.listing.findMany({
     where: {
-      userId: (session.user as SessionUser).id,
+      userId: user.id,
     },
   });
 

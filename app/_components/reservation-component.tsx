@@ -87,9 +87,15 @@ export const ReservationComponent = ({
       if (res?.ok) {
         toast.success("Reservation Done!");
         router.push("/bookings");
+      } else {
+        toast.error(res?.message || "Failed to make reservation.");
+        if (res?.status === 403) {
+          router.push("/sign-in");
+        }
       }
       router.refresh();
     } catch {
+      toast.error("An unexpected error occurred.");
       return { ok: false, message: "missing fields" };
     }
   };
