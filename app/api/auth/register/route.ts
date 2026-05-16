@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       },
     });
     return NextResponse.json(user, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Registration database error:", error);
     return NextResponse.json({ message: "A secure connection to the database could not be established. Please try again shortly." }, { status: 500 });
   }

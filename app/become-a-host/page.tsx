@@ -3,7 +3,6 @@ export const revalidate = 0;
 
 import { getUser } from "../actions/getUser";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { BecomeAHostComponent } from "../_components/BecomeaHostComponent";
 
 async function BecomeAHost() {

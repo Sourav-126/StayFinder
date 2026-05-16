@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { getUser } from "@/app/actions/getUser";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getReservation } from "../../actions/reservation";
 import { BookedCard } from "@/app/_components/bookedCard";
 

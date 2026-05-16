@@ -4,7 +4,6 @@ import { getListings } from "./actions/getListings";
 import { Metadata } from "next";
 import { getUser } from "./actions/getUser";
 import { SafeUser } from "./types";
-import { redirect } from "next/navigation";
 export const metadata: Metadata = {
   title: "StayFinder",
 };

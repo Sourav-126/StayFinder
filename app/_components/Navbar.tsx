@@ -10,6 +10,7 @@ import { CircleUserRound, LogOut, Search } from "lucide-react";
 import { useState } from "react";
 import { SearchModal } from "./searchModal";
 import Link from "next/link";
+import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import type { SafeUser } from "../types";
@@ -100,9 +101,11 @@ const UserComponent = ({ currentUser }: { currentUser: SafeUser | null }) => {
       <DropdownMenuTrigger asChild>
         <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
           {currentUser?.image ? (
-            <img
+            <Image
               src={currentUser.image}
               alt="User Profile"
+              width={32}
+              height={32}
               className="h-8 w-8 rounded-full object-cover"
               referrerPolicy="no-referrer"
             />

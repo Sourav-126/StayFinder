@@ -17,17 +17,17 @@ interface SearchParams {
 export async function getListings(
   searchParams: SearchParams
 ): Promise<Listing[] | { ok: false; message: string }> {
-  try {
-    const {
-      locationValue: locationvalue,
-      guestCount,
-      roomCount,
-      childCount,
-      startDate,
-      endDate,
-      cat,
-    } = searchParams;
+  const {
+    locationValue: locationvalue,
+    guestCount,
+    roomCount,
+    childCount,
+    startDate,
+    endDate,
+    cat,
+  } = searchParams;
 
+  try {
     const query: Prisma.ListingWhereInput = {};
 
     if (locationvalue) query.locationvalue = locationvalue;
@@ -81,8 +81,7 @@ export async function getListings(
     }));
 
     return modifiedListings;
-  } catch (error: any) {
-    console.error("Error in getListings:", error);
-    return { ok: false, message: error?.message || "Nothing done" };
+  } catch {
+    return { ok: false, message: "Nothing done" };
   }
 }

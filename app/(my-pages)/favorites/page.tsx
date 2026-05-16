@@ -4,7 +4,7 @@ export const revalidate = 0;
 import { getFavoriteListings } from "@/app/actions/favorites";
 import { getUser } from "@/app/actions/getUser";
 import ListingsCard from "@/app/_components/listings-card";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import React from "react";
 import Link from "next/link";
 
