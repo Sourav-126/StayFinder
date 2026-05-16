@@ -16,7 +16,6 @@ interface PropertyBoxProps {
 export const PropertyBox = ({
   each,
   isApproved,
-  adminApproved,
 }: PropertyBoxProps) => {
   const router = useRouter();
 

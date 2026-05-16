@@ -4,7 +4,6 @@ import { getListings } from "./actions/getListings";
 import { Metadata } from "next";
 import { getUser } from "./actions/getUser";
 import { SafeUser } from "./types";
-import { redirect } from "next/navigation";
 export const metadata: Metadata = {
   title: "StayFinder",
 };
@@ -37,17 +36,13 @@ export default async function Home({ searchParams }: Props) {
 
   const rawUser = await getUser();
 
-  if (!rawUser || "ok" in rawUser || !rawUser.id) {
-    redirect("/sign-up");
-  }
-
-  const user: SafeUser = {
+  const user: SafeUser | null = rawUser && !("ok" in rawUser) && rawUser.id ? {
     id: rawUser.id,
     name: rawUser.name ?? undefined,
     email: rawUser.email ?? undefined,
     image: rawUser.image ?? undefined,
     favoriteIds: rawUser.favoritesIds ?? [],
-  };
+  } : null;
 
   const parsedParams: ParsedParams = {
     locationValue: resolvedSearchParams.locationValue || "",
@@ -69,11 +64,15 @@ export default async function Home({ searchParams }: Props) {
 
   if (!Array.isArray(listings)) {
     return (
-      <section className="w-full grid items-center">
-        <h1 className="text-3xl font-semibold text-red-600">
-          Error Loading Listings
-        </h1>
-        <pre>{listings.message || "Something went wrong"}</pre>
+      <section className="w-full h-[60vh] flex flex-col items-center justify-center text-center p-4">
+        <div className="max-w-md space-y-4">
+          <h1 className="text-3xl font-bold text-red-500">
+            Unable to Load Listings
+          </h1>
+          <p className="text-muted-foreground">
+            We are experiencing a temporary database connection issue. Please verify your connection or try again in a few moments.
+          </p>
+        </div>
       </section>
     );
   }
@@ -104,7 +103,7 @@ export default async function Home({ searchParams }: Props) {
               ...listing,
               imageSrc: listing.imageSrc ?? "/fallback.jpg",
             }}
-            user={user}
+            user={user ?? undefined}
           />
         ))}
       </div>

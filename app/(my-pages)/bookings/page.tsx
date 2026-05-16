@@ -1,5 +1,8 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { getUser } from "@/app/actions/getUser";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getReservation } from "../../actions/reservation";
 import { BookedCard } from "@/app/_components/bookedCard";
 
@@ -18,7 +21,9 @@ export default async function Bookings() {
   const user = await getUser();
   const data = await getReservation();
 
-  if (!user) notFound();
+  if (!user || "ok" in user) {
+    redirect("/sign-in");
+  }
 
   if (!data || "ok" in data || data.length === 0) {
     return (

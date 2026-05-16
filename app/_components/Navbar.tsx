@@ -10,11 +10,23 @@ import { CircleUserRound, LogOut, Search } from "lucide-react";
 import { useState } from "react";
 import { SearchModal } from "./searchModal";
 import Link from "next/link";
+import Image from "next/image";
 import { signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import type { SafeUser } from "../types";
+
 type Step = 0 | 1 | 2;
-export default function Navbar() {
+
+interface NavbarProps {
+  currentUser: SafeUser | null;
+}
+
+export default function Navbar({ currentUser }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalStateStep, setModalStateStep] = useState<Step>(0);
+  const pathname = usePathname();
+
+  const isAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
 
   const openSearchModalStep = (step: Step) => {
     if (!isOpen) {
@@ -31,85 +43,117 @@ export default function Navbar() {
           StayFinder
         </Link>
       </div>
-      <div className="search_feature flex gap-3 items-center bg-white px-[6px] py-[7px] border-2 rounded-full">
-        <div
-          className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
-          onClick={() => {
-            openSearchModalStep(0);
-          }}
-        >
-          Location
-        </div>
-        <div className="bg-gray-400 h-[20px] w-[0.7px] "></div>
-        <div
-          className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
-          onClick={() => {
-            openSearchModalStep(1);
-          }}
-        >
-          Date
-        </div>
-        <div className="bg-gray-800 h-[20px] w-[0.7px]"></div>
+      {!isAuthPage && (
+        <div className="search_feature flex gap-3 items-center bg-white px-[6px] py-[7px] border-2 rounded-full">
+          <div
+            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
+            onClick={() => {
+              openSearchModalStep(0);
+            }}
+          >
+            Location
+          </div>
+          <div className="bg-gray-400 h-[20px] w-[0.7px] "></div>
+          <div
+            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
+            onClick={() => {
+              openSearchModalStep(1);
+            }}
+          >
+            Date
+          </div>
+          <div className="bg-gray-800 h-[20px] w-[0.7px]"></div>
 
-        <div
-          className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
-          onClick={() => {
-            openSearchModalStep(2);
-          }}
-        >
-          Details
+          <div
+            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
+            onClick={() => {
+              openSearchModalStep(2);
+            }}
+          >
+            Details
+          </div>
+          <div
+            onClick={() => openSearchModalStep(0)}
+            className="bg-red-400 rounded-full p-1 text-white cursor-pointer hover:scale-105 transition-all duration-200 delay-100"
+          >
+            <Search />
+          </div>
         </div>
-        <div
-          onClick={() => openSearchModalStep(0)}
-          className="bg-red-400 rounded-full p-1 text-white cursor-pointer hover:scale-105 transition-all duration-200 delay-100"
-        >
-          <Search />
-        </div>
-      </div>
+      )}
       <div>
-        <UserComponent />
+        <UserComponent currentUser={currentUser} />
       </div>
-      <SearchModal
-        key={modalStateStep}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        stepAt={modalStateStep}
-      />
+      {!isAuthPage && (
+        <SearchModal
+          key={modalStateStep}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          stepAt={modalStateStep}
+        />
+      )}
     </div>
   );
 }
 
-const UserComponent = () => {
+const UserComponent = ({ currentUser }: { currentUser: SafeUser | null }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
-          <CircleUserRound className="h-8 w-8 text-gray-600" />
+        <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+          {currentUser?.image ? (
+            <Image
+              src={currentUser.image}
+              alt="User Profile"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <CircleUserRound className="h-8 w-8 text-gray-600" />
+          )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className="cursor-pointer">
-          <Link href="/bookings">My Bookings</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          <Link href="/favorites">My Favorites</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          <Link href="/properties">My Properties</Link>
-        </DropdownMenuItem>
-        <hr />
-        <DropdownMenuItem className="cursor-pointer">
-          <Link href="/become-a-host"> StayPlace Your Home!</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={() => signOut({ callbackUrl: "/sign-in" })}
-        >
-          <div className="flex gap-2">
-            <LogOut />
-            Logout
-          </div>
-        </DropdownMenuItem>
+        {currentUser ? (
+          <>
+            <DropdownMenuItem className="cursor-pointer">
+              <Link href="/bookings" className="w-full">My Bookings</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Link href="/favorites" className="w-full">My Favorites</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Link href="/properties" className="w-full">My Properties</Link>
+            </DropdownMenuItem>
+            <hr />
+            <DropdownMenuItem className="cursor-pointer">
+              <Link href="/become-a-host" className="w-full"> StayPlace Your Home!</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                signOut({ callbackUrl: "/sign-in" });
+              }}
+            >
+              <div className="flex gap-2 w-full">
+                <LogOut />
+                Logout
+              </div>
+            </DropdownMenuItem>
+          </>
+        ) : (
+          <>
+            <DropdownMenuItem className="cursor-pointer">
+              <Link href="/sign-in" className="w-full font-semibold">Login</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Link href="/sign-up" className="w-full">Sign Up</Link>
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -7,21 +7,24 @@ export async function POST(request: Request) {
 
   const { name, email, password } = body;
 
-  if (!name.trim() || !email.trim() || !password.trim()) {
-    return NextResponse.json({ message: "fields are empty" }, { status: 500 });
+  if (!name || typeof name !== "string" || !name.trim() ||
+      !email || typeof email !== "string" || !email.trim() ||
+      !password || typeof password !== "string" || !password.trim()) {
+    return NextResponse.json({ message: "Missing or invalid fields." }, { status: 400 });
   }
 
   const hashedPass = await hash(password, saltRounds);
   try {
     const user = await prisma.user.create({
       data: {
-        name: name,
-        email: email,
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
         hashedPassword: hashedPass,
       },
     });
     return NextResponse.json(user, { status: 200 });
-  } catch {
-    return NextResponse.json("Failed", { status: 500 });
+  } catch (error) {
+    console.error("Registration database error:", error);
+    return NextResponse.json({ message: "A secure connection to the database could not be established. Please try again shortly." }, { status: 500 });
   }
 }

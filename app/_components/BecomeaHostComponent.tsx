@@ -1,5 +1,4 @@
 "use client";
-import { Listing } from "../types";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { categories } from "@/static/config";
@@ -46,7 +45,6 @@ export const BecomeAHostComponent = () => {
     handleSubmit,
     setValue,
     watch,
-    formState: { isSubmitting: formSubmitting },
   } = useForm<ListingFormData>({
     defaultValues: {
       title: "",
@@ -130,7 +128,7 @@ export const BecomeAHostComponent = () => {
       } else {
         toast.error(responseData.error || "Something went wrong");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to submit property");
     } finally {
       setIsSubmitting(false);

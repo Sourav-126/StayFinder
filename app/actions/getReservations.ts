@@ -12,7 +12,8 @@ export default async function getReservationById(listingId: string) {
       },
     });
     return reservations;
-  } catch {
-    return { ok: false, message: "reservation not found" };
+  } catch (error: unknown) {
+    console.error("Failed to fetch reservations, returning empty array:", error);
+    return [];
   }
 }

@@ -1,19 +1,23 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import React from "react";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { prisma } from "../../utils/prisma";
-import { getAuthSession } from "../../utils/auth";
+import { getUser } from "@/app/actions/getUser";
 import { PropertyBox } from "../../_components/PropertyBox";
 import Link from "next/link";
-import type { SessionUser } from "@/app/types";
 
 export default async function PropertiesPage() {
-  const session = await getAuthSession();
+  const user = await getUser();
 
-  if (!session) notFound();
+  if (!user || "ok" in user) {
+    redirect("/sign-in");
+  }
 
   const propertiesList = await prisma.listing.findMany({
     where: {
-      userId: (session.user as SessionUser).id,
+      userId: user.id,
     },
   });
 
@@ -40,11 +44,11 @@ export default async function PropertiesPage() {
     <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
       <div className="pt-28">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-          {safePropertiesList.map((listing: any) => (
+          {safePropertiesList.map((listing) => (
             <PropertyBox
               key={listing.id}
-              {...listing}
-              showApprovalStatus={true}
+              each={listing}
+              isApproved={listing.isApproved}
             />
           ))}
         </div>

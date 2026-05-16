@@ -4,6 +4,8 @@ import { Poppins } from "next/font/google";
 import Navbar from "./_components/Navbar";
 import { Toaster } from "sonner";
 import { Suspense } from "react";
+import { getUser } from "./actions/getUser";
+import { SafeUser } from "./types";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,10 +22,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const rawUser = await getUser();
+  const currentUser: SafeUser | null = rawUser && !("ok" in rawUser) && rawUser.id ? {
+    id: rawUser.id,
+    name: rawUser.name ?? undefined,
+    email: rawUser.email ?? undefined,
+    image: rawUser.image ?? undefined,
+    favoriteIds: rawUser.favoritesIds ?? [],
+  } : null;
+
   return (
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
-        <Navbar />
+        <Navbar currentUser={currentUser} />
         <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         <Toaster />
       </body>

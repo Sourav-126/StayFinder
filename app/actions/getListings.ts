@@ -17,17 +17,17 @@ interface SearchParams {
 export async function getListings(
   searchParams: SearchParams
 ): Promise<Listing[] | { ok: false; message: string }> {
-  try {
-    const {
-      locationValue: locationvalue,
-      guestCount,
-      roomCount,
-      childCount,
-      startDate,
-      endDate,
-      cat,
-    } = searchParams;
+  const {
+    locationValue: locationvalue,
+    guestCount,
+    roomCount,
+    childCount,
+    startDate,
+    endDate,
+    cat,
+  } = searchParams;
 
+  try {
     const query: Prisma.ListingWhereInput = {};
 
     if (locationvalue) query.locationvalue = locationvalue;
@@ -69,6 +69,7 @@ export async function getListings(
       },
       where: {
         isApproved: true,
+        ...query,
       },
       orderBy: {
         createdAt: "desc",
