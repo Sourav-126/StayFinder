@@ -60,43 +60,49 @@ async function SingleListingPage({
           />
 
           <div className="grid grid-cols-5 gap-6 lg:gap-10">
-            <div className="left col-span-5 lg:col-span-3 space-y-4">
-              <div className="flex items-center gap-2">
-                <h5>
-                  Hosted by{" "}
-                  <span className="font-medium">{data.User?.name}</span>
-                  <p className="text-xs xs:text-sm text-gray-500">
-                    Listed on{" "}
-                    {new Date(data.createdAt).toLocaleDateString("en-IN", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </p>
-                </h5>
+            <div className="left col-span-5 lg:col-span-3 space-y-5">
+              <div className="flex items-center gap-4 bg-gray-50/80 border border-gray-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
                 {data.User?.image && (
                   <Image
                     src={data.User.image}
                     alt={data.User.name ?? "Host"}
-                    width={40}
-                    height={40}
-                    className="rounded-full ml-auto"
+                    width={50}
+                    height={50}
+                    className="rounded-full shadow-sm border border-gray-200"
                   />
                 )}
+                <div>
+                  <h4 className="text-base font-bold text-gray-800">
+                    Hosted by {data.User?.name}
+                  </h4>
+                  <p className="text-xs text-gray-500 font-medium">
+                    Host since{" "}
+                    {new Date(data.createdAt).toLocaleDateString("en-IN", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
               </div>
 
-              <hr />
+              <hr className="border-gray-100" />
 
-              <div className="grid grid-cols-3 gap-2 xs:gap-4">
-                <span className="p-3 xs:p-4 bg-red-100/40 font-semibold rounded-lg flex flex-col items-center text-center text-xs xs:text-sm md:text-base">
-                  <UserRound className="w-4 h-4 xs:w-5 xs:h-5 mb-1" /> Guests: {data.guestCount}
-                </span>
-                <span className="p-3 xs:p-4 bg-red-100/40 font-semibold rounded-lg flex flex-col items-center text-center text-xs xs:text-sm md:text-base">
-                  <House className="w-4 h-4 xs:w-5 xs:h-5 mb-1" /> Rooms: {data.roomCount}
-                </span>
-                <span className="p-3 xs:p-4 font-semibold bg-red-100/40 rounded-lg flex flex-col items-center text-center text-xs xs:text-sm md:text-base">
-                  <Baby className="w-4 h-4 xs:w-5 xs:h-5 mb-1" /> Children: {data.childCount}
-                </span>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="p-3 xs:p-4 bg-red-50/40 border border-red-100/50 font-semibold rounded-2xl flex flex-col items-center text-center text-xs xs:text-sm md:text-base shadow-sm text-red-500 hover:bg-red-50/60 transition-colors duration-300">
+                  <UserRound className="w-5 h-5 mb-1.5 stroke-[2]" />
+                  <span className="text-gray-400 font-medium text-[10px] xs:text-xs mb-0.5">Guests</span>
+                  {data.guestCount}
+                </div>
+                <div className="p-3 xs:p-4 bg-red-50/40 border border-red-100/50 font-semibold rounded-2xl flex flex-col items-center text-center text-xs xs:text-sm md:text-base shadow-sm text-red-500 hover:bg-red-50/60 transition-colors duration-300">
+                  <House className="w-5 h-5 mb-1.5 stroke-[2]" />
+                  <span className="text-gray-400 font-medium text-[10px] xs:text-xs mb-0.5">Rooms</span>
+                  {data.roomCount}
+                </div>
+                <div className="p-3 xs:p-4 bg-red-50/40 border border-red-100/50 font-semibold rounded-2xl flex flex-col items-center text-center text-xs xs:text-sm md:text-base shadow-sm text-red-500 hover:bg-red-50/60 transition-colors duration-300">
+                  <Baby className="w-5 h-5 mb-1.5 stroke-[2]" />
+                  <span className="text-gray-400 font-medium text-[10px] xs:text-xs mb-0.5">Children</span>
+                  {data.childCount}
+                </div>
               </div>
 
               <hr />

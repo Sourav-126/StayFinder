@@ -14,6 +14,7 @@ type Listing = {
   title?: string;
   price?: number;
   locationvalue?: string;
+  category?: string;
 };
 
 type ReservationData = {
@@ -54,27 +55,22 @@ export default function ListingsCard({
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 25 },
+        hidden: { opacity: 0, y: 20 },
         visible: {
           opacity: 1,
           y: 0,
           transition: { type: "spring", stiffness: 100, damping: 15 }
-        },
-        hover: {
-          y: -6,
-          boxShadow: "0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.08)",
-          transition: { type: "spring", stiffness: 300, damping: 20 }
         },
         tap: { scale: 0.98 }
       }}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
-      whileHover="hover"
       whileTap="tap"
-      className="p-3 rounded shadow border border-gray-200 relative bg-white transition-all duration-300"
+      className="relative flex flex-col gap-2 cursor-pointer group bg-transparent select-none"
+      onClick={() => router.push(`/listings/${listing.id}`)}
     >
-      <div className="w-full aspect-square rounded-lg overflow-hidden">
+      <div className="w-full aspect-square rounded-2xl overflow-hidden relative shadow-sm">
         <motion.div
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
@@ -88,49 +84,47 @@ export default function ListingsCard({
             alt="property listing"
           />
         </motion.div>
+
+        {listing.category && (
+          <div className="absolute top-3 left-3 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider text-white uppercase select-none border border-white/15 z-10 shadow-sm">
+            {listing.category}
+          </div>
+        )}
+
+        <Favorite
+          className="absolute top-3 right-3 z-10"
+          listingId={listing.id}
+          user={user ?? null}
+        />
       </div>
 
-      <Favorite
-        className="absolute top-6 right-6 z-10"
-        listingId={listing.id}
-        user={user ?? null}
-      />
-
-      <p className="font-semibold text-lg md:text-2xl capitalize pt-2 truncate">
-        {listing.title || "Untitled Property"}
-      </p>
-
-      {reservationsData ? (
-        <p className="text-sm text-gray-600">Paid {reservationsData.price} rupees per Night</p>
-      ) : (
-        <p className="text-lg flex gap-1 items-center font-medium">
-          <IndianRupee size={16} /> {listing.price ?? "N/A"}{" "}
-          <span className="text-sm font-normal text-gray-500">per Night</span>
+      <div className="flex flex-col text-left px-1">
+        <p className="font-bold text-[15px] text-gray-800 group-hover:text-red-500 transition-colors duration-200 truncate mt-1">
+          {listing.title || "Untitled Property"}
         </p>
-      )}
-
-      <div className="text-gray-400 text-sm truncate">
-        {countryDetails?.label}, {countryDetails?.region}
+        <p className="text-sm text-gray-500 truncate">
+          {countryDetails?.label}, {countryDetails?.region}
+        </p>
+        <p className="text-sm font-semibold text-gray-900 mt-1 flex items-center gap-0.5">
+          <span className="font-bold flex items-center"><IndianRupee size={13} className="mr-0.5 stroke-[2.5]" />{listing.price ?? "N/A"}</span>
+          <span className="font-normal text-gray-500 ml-1">night</span>
+        </p>
       </div>
 
-      <div className="flex flex-col gap-2 mt-3">
-        <Button
-          onClick={() => router.push(`/listings/${listing.id}`)}
-          className="w-full cursor-pointer hover:bg-zinc-800 transition-colors"
-        >
-          View Property
-        </Button>
-
-        {showSecondaryBtn && onAction && (
+      {showSecondaryBtn && onAction && (
+        <div className="px-1 mt-1">
           <Button 
             variant="outline" 
-            onClick={onAction}
-            className="w-full cursor-pointer border-red-200 hover:bg-red-50 hover:text-red-600 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation(); // Avoid card click navigation
+              onAction(e);
+            }}
+            className="w-full cursor-pointer border-red-200 hover:bg-red-50 hover:text-red-600 transition-colors text-xs py-1 h-8 rounded-xl"
           >
             {secondaryBtnLabel}
           </Button>
-        )}
-      </div>
+        </div>
+      )}
     </motion.div>
   );
 }

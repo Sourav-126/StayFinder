@@ -138,7 +138,7 @@ const SearchModalContent: React.FC<SearchModalProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.2 }}
-        className="w-full h-screen relative bg-black/40"
+        className="w-full h-screen relative bg-black/25 backdrop-blur-sm xs:backdrop-blur-md"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: "-47%", x: "-50%" }}

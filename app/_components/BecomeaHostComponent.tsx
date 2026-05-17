@@ -162,23 +162,39 @@ export const BecomeAHostComponent = () => {
           Which of this category defines your Property?
         </h1>
         <p className="text-gray-500">Pick a Category</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
           {categories.map((each) => (
-            <div
+            <motion.div
               key={each.label}
               onClick={() => {
                 setCustomValue("category", each.label);
               }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
               className={cn(
-                "bg-gray-100 flex flex-col p-5 rounded-lg border-2 cursor-pointer hover:border-red-400 transition-colors",
+                "flex flex-col p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 relative overflow-hidden group select-none shadow-sm",
                 category === each.label
-                  ? "bg-red-400/80 text-white border-red-400"
-                  : "bg-gray-100 border-gray-300"
+                  ? "bg-red-50/60 border-red-400 text-red-500 shadow-md shadow-red-100"
+                  : "bg-gray-50 border-gray-200/80 text-gray-500 hover:border-red-200 hover:bg-white"
               )}
             >
-              <each.icon className="mb-2" />
-              <span className="text-sm font-medium">{each.label}</span>
-            </div>
+              <div className="flex justify-between items-center w-full mb-3">
+                <each.icon className={cn("w-6 h-6 stroke-[1.75]", category === each.label ? "text-red-500" : "text-gray-400")} />
+                {category === each.label && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="w-5 h-5 bg-red-400 rounded-full flex items-center justify-center shadow-sm"
+                  >
+                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </motion.div>
+                )}
+              </div>
+              <span className="text-sm font-bold tracking-tight">{each.label}</span>
+            </motion.div>
           ))}
         </div>
       </div>
