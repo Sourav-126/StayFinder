@@ -86,8 +86,8 @@ export const LoginForm = ({ origin = "signin" }: LoginFormProps) => {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center">
-      <div className="space-y-2 w-full sm:w-1/2 flex flex-col items-center">
+    <div className="flex h-screen justify-center items-center px-4">
+      <div className="space-y-2 w-full xs:w-4/5 sm:w-1/2 max-w-md flex flex-col items-center">
         {origin === "Signup" && (
           <Input {...register("name")} type="text" placeholder="Your name" />
         )}

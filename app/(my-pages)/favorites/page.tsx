@@ -61,7 +61,7 @@ async function Favorites() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10 max-w-[1920px] mx-auto">
         {favorites.map((listing) => (
           <ListingsCard
             key={listing.id}

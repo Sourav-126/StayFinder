@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 import { categories } from "@/static/config";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -161,23 +162,39 @@ export const BecomeAHostComponent = () => {
           Which of this category defines your Property?
         </h1>
         <p className="text-gray-500">Pick a Category</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
           {categories.map((each) => (
-            <div
+            <motion.div
               key={each.label}
               onClick={() => {
                 setCustomValue("category", each.label);
               }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
               className={cn(
-                "bg-gray-100 flex flex-col p-5 rounded-lg border-2 cursor-pointer hover:border-red-400 transition-colors",
+                "flex flex-col p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 relative overflow-hidden group select-none shadow-sm",
                 category === each.label
-                  ? "bg-red-400/80 text-white border-red-400"
-                  : "bg-gray-100 border-gray-300"
+                  ? "bg-red-50/60 border-red-400 text-red-500 shadow-md shadow-red-100"
+                  : "bg-gray-50 border-gray-200/80 text-gray-500 hover:border-red-200 hover:bg-white"
               )}
             >
-              <each.icon className="mb-2" />
-              <span className="text-sm font-medium">{each.label}</span>
-            </div>
+              <div className="flex justify-between items-center w-full mb-3">
+                <each.icon className={cn("w-6 h-6 stroke-[1.75]", category === each.label ? "text-red-500" : "text-gray-400")} />
+                {category === each.label && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="w-5 h-5 bg-red-400 rounded-full flex items-center justify-center shadow-sm"
+                  >
+                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </motion.div>
+                )}
+              </div>
+              <span className="text-sm font-bold tracking-tight">{each.label}</span>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -200,7 +217,7 @@ export const BecomeAHostComponent = () => {
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           Choose your preferences
         </h1>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-3">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many rooms do you want?
@@ -213,7 +230,7 @@ export const BecomeAHostComponent = () => {
           />
         </div>
         <div className="w-full h-[0.4px] bg-gray-300 my-6" />
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-3">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many Children do you have?
@@ -226,7 +243,7 @@ export const BecomeAHostComponent = () => {
           />
         </div>
         <div className="w-full h-[0.4px] bg-gray-300 my-6" />
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-3">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many Adults are planning to join?
@@ -304,9 +321,19 @@ export const BecomeAHostComponent = () => {
 
   return (
     <section className="min-h-screen p-6">
-      {sourceAtStep}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 15 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -15 }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+        >
+          {sourceAtStep}
+        </motion.div>
+      </AnimatePresence>
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-        <div className="flex justify-between items-center px-8 py-4">
+        <div className="flex justify-between items-center px-4 xs:px-8 py-4">
           {step > 0 ? (
             <button
               className="p-4 bg-red-400 rounded-full cursor-pointer hover:bg-red-500 transition-colors"
