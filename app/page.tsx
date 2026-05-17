@@ -94,7 +94,7 @@ export default async function Home({ searchParams }: Props) {
   return (
     <section className="">
       <CategoryHandler />
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-6 p-4 md:p-8">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 p-4 md:p-8">
         {listings.map((listing) => (
           <ListingsCard
             key={listing.id}

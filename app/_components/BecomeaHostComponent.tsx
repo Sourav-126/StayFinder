@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 import { categories } from "@/static/config";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -200,7 +201,7 @@ export const BecomeAHostComponent = () => {
         <h1 className="text-lg md:text-xl font-semibold text-gray-600">
           Choose your preferences
         </h1>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-3">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many rooms do you want?
@@ -213,7 +214,7 @@ export const BecomeAHostComponent = () => {
           />
         </div>
         <div className="w-full h-[0.4px] bg-gray-300 my-6" />
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-3">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many Children do you have?
@@ -226,7 +227,7 @@ export const BecomeAHostComponent = () => {
           />
         </div>
         <div className="w-full h-[0.4px] bg-gray-300 my-6" />
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-3">
           <span>
             <h3 className="text-lg font-semibold text-gray-600">
               How many Adults are planning to join?
@@ -304,9 +305,19 @@ export const BecomeAHostComponent = () => {
 
   return (
     <section className="min-h-screen p-6">
-      {sourceAtStep}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 15 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -15 }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+        >
+          {sourceAtStep}
+        </motion.div>
+      </AnimatePresence>
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-        <div className="flex justify-between items-center px-8 py-4">
+        <div className="flex justify-between items-center px-4 xs:px-8 py-4">
           {step > 0 ? (
             <button
               className="p-4 bg-red-400 rounded-full cursor-pointer hover:bg-red-500 transition-colors"

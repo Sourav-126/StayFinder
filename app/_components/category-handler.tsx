@@ -19,7 +19,7 @@ function CategoryHandlerContent() {
   };
 
   return (
-    <div className="flex px-8 w-full justify-around py-2 border-b border-gray-100 overflow-x-auto">
+    <div className="flex px-4 xs:px-8 w-full justify-start md:justify-around py-2 border-b border-gray-100 overflow-x-auto gap-4 md:gap-0 scrollbar-none">
       {categories.map((cat) => {
         return (
           <div
@@ -43,7 +43,7 @@ export default function CategoryHandler() {
   return (
     <Suspense
       fallback={
-        <div className="flex px-8 w-full justify-around py-2 border-b border-gray-100 overflow-x-auto">
+        <div className="flex px-4 xs:px-8 w-full justify-start md:justify-around py-2 border-b border-gray-100 overflow-x-auto gap-4 md:gap-0 scrollbar-none">
           <div className="animate-pulse">Loading categories...</div>
         </div>
       }

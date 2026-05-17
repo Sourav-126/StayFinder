@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,37 +36,47 @@ export default function Navbar({ currentUser }: NavbarProps) {
     }
   };
   return (
-    <div className="flex justify-between items-center px-5 md:px-16 sm:px-20 py-3 bg-muted border-b">
-      <div className="logo flex gap-1">
+    <div className="flex justify-between items-center px-3 xs:px-6 sm:px-16 md:px-20 py-3 bg-muted border-b">
+      <motion.div
+        initial={{ opacity: 0, x: -15 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ type: "spring", stiffness: 200, damping: 18 }}
+        className="logo flex gap-1 items-center"
+      >
         <Icons.logo className="w-6" />
-        <Link href="/" className="text-red-400 font-semibold text-lg">
+        <Link href="/" className="hidden xs:inline text-red-400 font-semibold text-lg">
           {" "}
           StayFinder
         </Link>
-      </div>
+      </motion.div>
       {!isAuthPage && (
-        <div className="search_feature flex gap-3 items-center bg-white px-[6px] py-[7px] border-2 rounded-full">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 18 }}
+          className="search_feature flex gap-1 xs:gap-3 items-center bg-white px-1.5 xs:px-[6px] py-1 xs:py-[7px] border-2 rounded-full text-[10px] xs:text-xs sm:text-sm"
+        >
           <div
-            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
+            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-1.5 xs:px-3 py-0.5 xs:py-1 rounded-full cursor-pointer font-medium"
             onClick={() => {
               openSearchModalStep(0);
             }}
           >
             Location
           </div>
-          <div className="bg-gray-400 h-[20px] w-[0.7px] "></div>
+          <div className="bg-gray-400 h-[12px] xs:h-[20px] w-[0.7px]"></div>
           <div
-            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
+            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-1.5 xs:px-3 py-0.5 xs:py-1 rounded-full cursor-pointer font-medium"
             onClick={() => {
               openSearchModalStep(1);
             }}
           >
             Date
           </div>
-          <div className="bg-gray-800 h-[20px] w-[0.7px]"></div>
+          <div className="bg-gray-800 h-[12px] xs:h-[20px] w-[0.7px]"></div>
 
           <div
-            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-3 py-1 rounded-full cursor-pointer"
+            className="hover:bg-gray-200 transition-colors duration-200 delay-100 px-1.5 xs:px-3 py-0.5 xs:py-1 rounded-full cursor-pointer font-medium"
             onClick={() => {
               openSearchModalStep(2);
             }}
@@ -74,11 +85,11 @@ export default function Navbar({ currentUser }: NavbarProps) {
           </div>
           <div
             onClick={() => openSearchModalStep(0)}
-            className="bg-red-400 rounded-full p-1 text-white cursor-pointer hover:scale-105 transition-all duration-200 delay-100"
+            className="bg-red-400 rounded-full p-1 text-white cursor-pointer hover:scale-105 transition-all duration-200 delay-100 flex items-center justify-center"
           >
-            <Search />
+            <Search className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
           </div>
-        </div>
+        </motion.div>
       )}
       <div>
         <UserComponent currentUser={currentUser} />

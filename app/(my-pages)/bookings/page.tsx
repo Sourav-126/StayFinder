@@ -55,7 +55,7 @@ export default async function Bookings() {
 
   return (
     <div className="p-4 md:p-8">
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {safeReservations.map((reserve, index) => (
           <BookedCard key={index} reservation={reserve} index={index} />
         ))}
