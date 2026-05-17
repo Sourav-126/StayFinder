@@ -9,7 +9,7 @@ import { Counter } from "./counter-input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Range } from "react-date-range";
 import type { CountrySelectValue } from "../types";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 
 const STEPS = {

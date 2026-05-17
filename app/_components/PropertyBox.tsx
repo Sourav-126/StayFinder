@@ -37,7 +37,6 @@ export const PropertyBox = ({
   return (
     <div className="relative">
       <ListingsCard
-        reservationsData={{ price: each.price }}
         listing={{
           ...each,
           imageSrc: each.imageSrc ?? undefined,

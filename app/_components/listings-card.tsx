@@ -106,8 +106,13 @@ export default function ListingsCard({
           {countryDetails?.label}, {countryDetails?.region}
         </p>
         <p className="text-sm font-semibold text-gray-900 mt-1 flex items-center gap-0.5">
-          <span className="font-bold flex items-center"><IndianRupee size={13} className="mr-0.5 stroke-[2.5]" />{listing.price ?? "N/A"}</span>
-          <span className="font-normal text-gray-500 ml-1">night</span>
+          <span className="font-bold flex items-center">
+            <IndianRupee size={13} className="mr-0.5 stroke-[2.5]" />
+            {reservationsData ? reservationsData.price : (listing.price ?? "N/A")}
+          </span>
+          <span className="font-normal text-gray-500 ml-1">
+            {reservationsData ? "total" : "night"}
+          </span>
         </p>
       </div>
 
